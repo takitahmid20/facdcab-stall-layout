@@ -51,23 +51,37 @@ function buildInitialUnits() {
   }
 
   // left column (col 0): x = 0px
+  // 51-52 remains paired
   addUnit([52, 51], 0, 78, 58, 121, true);
-  addUnit([49, 50], 0, 267, 58, 121, true);
+  
+  // 49-50 split into single
+  addUnit([50], 0, 267, 58, 58, false);
+  addUnit([49], 0, 330, 58, 58, false);
+  
   addUnit([48], 0, 393, 58, 58, false);
   addUnit([47], 0, 456, 58, 58, false);
   addUnit([46], 0, 519, 58, 58, false);
   addUnit([45], 0, 582, 58, 58, false);
   addUnit([44], 0, 645, 58, 58, false);
   addUnit([43], 0, 708, 58, 58, false);
-  addUnit([42, 41], 0, 771, 58, 121, true);
+  
+  // 41-42 split into single
+  addUnit([42], 0, 771, 58, 58, false);
+  addUnit([41], 0, 834, 58, 58, false);
 
   // top horizontal row: y = 78px
-  addUnit([53, 54], 123, 78, 121, 58, true);
+  // 53-54 split into single
+  addUnit([53], 123, 78, 58, 58, false);
+  addUnit([54], 186, 78, 58, 58, false);
+  
   addUnit([55], 249, 78, 58, 58, false);
   addUnit([56], 312, 78, 58, 58, false);
-  addUnit([57, 58], 375, 78, 121, 58, true);
+  
+  // 57-58 split into single
+  addUnit([57], 375, 78, 58, 58, false);
+  addUnit([58], 438, 78, 58, 58, false);
 
-  // middle clusters (combined horizontal pairs: 59-60, 61-62, etc. each taking 121px width)
+  // middle clusters — all split into single stalls
   const clusterRows = [
     { top: 204, bottom: 267, nums: [59, 60, 61, 62, 63, 64, 65, 66] },
     { top: 350, bottom: 413, nums: [67, 68, 69, 70, 71, 72, 73, 74] },
@@ -75,41 +89,68 @@ function buildInitialUnits() {
     { top: 642, bottom: 705, nums: [83, 84, 85, 86, 87, 88, 89, 90] }
   ];
   clusterRows.forEach(c => {
-    addUnit([c.nums[0], c.nums[1]], 123, c.top, 121, 58, false);
-    addUnit([c.nums[2], c.nums[3]], 249, c.top, 121, 58, false);
-    addUnit([c.nums[4], c.nums[5]], 123, c.bottom, 121, 58, false);
-    addUnit([c.nums[6], c.nums[7]], 249, c.bottom, 121, 58, false);
+    addUnit([c.nums[0]], 123, c.top, 58, 58, false);
+    addUnit([c.nums[1]], 186, c.top, 58, 58, false);
+    addUnit([c.nums[2]], 249, c.top, 58, 58, false);
+    addUnit([c.nums[3]], 312, c.top, 58, 58, false);
+    addUnit([c.nums[4]], 123, c.bottom, 58, 58, false);
+    addUnit([c.nums[5]], 186, c.bottom, 58, 58, false);
+    addUnit([c.nums[6]], 249, c.bottom, 58, 58, false);
+    addUnit([c.nums[7]], 312, c.bottom, 58, 58, false);
   });
 
-  // bottom horizontal row: y = 892px (diagonal point contact with 41, starts at x = 58px)
+  // bottom horizontal row: y = 892px
+  // 39-40 remains paired
   addUnit([39, 40], 58, 892, 121, 58, true);
+  
   addUnit([38], 184, 892, 58, 58, false);
   addUnit([37], 247, 892, 58, 58, false);
   addUnit([36], 310, 892, 58, 58, false);
-  addUnit([34, 35], 373, 892, 121, 58, true);
+  
+  // 34-35 split into single
+  addUnit([35], 373, 892, 58, 58, false);
+  addUnit([34], 436, 892, 58, 58, false);
 
   // Aisle 1 column (x = 435px)
-  addUnit([24, 25], 435, 204, 58, 121, true);
+  // 24-25 split into single
+  addUnit([24], 435, 204, 58, 58, false);
+  addUnit([25], 435, 267, 58, 58, false);
+  
   [26, 27, 28, 29, 30, 31].forEach((n, i) => {
     addUnit([n], 435, 330 + i * 63, 58, 58, false);
   });
-  addUnit([32, 33], 435, 708, 58, 121, true);
+  
+  // 32-33 split into single
+  addUnit([32], 435, 708, 58, 58, false);
+  addUnit([33], 435, 771, 58, 58, false);
 
   // Aisle 2 Top Corner: y = 78px
+  // 13-14 remains paired
   addUnit([14, 13], 558, 78, 181, 58, true);
 
   // Aisle 2 Stalls (x = 558px)
-  addUnit([22, 23], 558, 204, 58, 121, true);
+  // 22-23 split into single
+  addUnit([23], 558, 204, 58, 58, false);
+  addUnit([22], 558, 267, 58, 58, false);
+  
   [21, 20, 19, 18, 17].forEach((n, i) => {
     addUnit([n], 558, 330 + i * 63, 58, 58, false);
   });
-  addUnit([15, 16], 558, 645, 58, 121, true);
+  
+  // 15-16 split into single
+  addUnit([16], 558, 645, 58, 58, false);
+  addUnit([15], 558, 708, 58, 58, false);
 
   // Rightmost column (x = 739px)
-  addUnit([11, 12], 739, 136, 58, 121.5, true);
+  // 11-12 split into single
+  addUnit([12], 739, 136, 58, 58, false);
+  addUnit([11], 739, 199.5, 58, 58, false);
+  
   [10, 9, 8, 7, 6, 5, 4, 3].forEach((n, i) => {
     addUnit([n], 739, 263 + i * 63.5, 58, 58, false);
   });
+  
+  // 1-2 remains paired
   addUnit([2, 1], 739, 771, 58, 121, true);
 
   return units;
