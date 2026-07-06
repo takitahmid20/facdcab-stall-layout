@@ -20,7 +20,7 @@ function buildInitialUnits() {
   const localBooked = JSON.parse(localStorage.getItem('booked_stalls_store') || '[]');
 
   function addUnit(nums, left, top, width, height, isCorner) {
-    const price = nums.length > 1 ? 160000 : 80000;
+    const price = nums.length * 80000;
     const label = nums.length > 1 ? nums.slice().sort((a, b) => a - b).join(' · ') : String(nums[0]);
     const id = 'u' + nums.slice().sort((a, b) => a - b).join('-');
 
@@ -100,54 +100,35 @@ function buildInitialUnits() {
   });
 
   // bottom horizontal row: y = 892px
-  // 39-40 remains paired
-  addUnit([39, 40], 58, 892, 121, 58, true);
-  
+  // 39-40 split into single
+  addUnit([40], 58, 892, 58, 58, false);
+  addUnit([39], 121, 892, 58, 58, false);
   addUnit([38], 184, 892, 58, 58, false);
   addUnit([37], 247, 892, 58, 58, false);
-  addUnit([36], 310, 892, 58, 58, false);
   
-  // 34-35 split into single
-  addUnit([35], 373, 892, 58, 58, false);
-  addUnit([34], 436, 892, 58, 58, false);
+  // 35-36 paired
+  addUnit([35, 36], 310, 892, 121, 58, true);
 
   // Aisle 1 column (x = 435px)
-  // 24-25 split into single
-  addUnit([24], 435, 204, 58, 58, false);
-  addUnit([25], 435, 267, 58, 58, false);
-  
-  [26, 27, 28, 29, 30, 31].forEach((n, i) => {
-    addUnit([n], 435, 330 + i * 63, 58, 58, false);
+  [25, 26, 27, 28, 29, 30, 31, 32, 33, 34].forEach((n, i) => {
+    addUnit([n], 435, 204 + i * 63, 58, 58, false);
   });
-  
-  // 32-33 split into single
-  addUnit([32], 435, 708, 58, 58, false);
-  addUnit([33], 435, 771, 58, 58, false);
 
   // Aisle 2 Top Corner: y = 78px
-  // 13-14 remains paired
-  addUnit([14, 13], 558, 78, 181, 58, true);
+  // 12-13-14 is a triple corner pair (moved 14 next to 13)
+  addUnit([14, 13, 12], 681, 78, 116, 116, true);
 
   // Aisle 2 Stalls (x = 558px)
-  // 22-23 split into single
-  addUnit([23], 558, 204, 58, 58, false);
-  addUnit([22], 558, 267, 58, 58, false);
-  
-  [21, 20, 19, 18, 17].forEach((n, i) => {
-    addUnit([n], 558, 330 + i * 63, 58, 58, false);
+  [24, 23, 22, 21, 20, 19, 18, 17, 16, 15].forEach((n, i) => {
+    addUnit([n], 558, 204 + i * 63, 58, 58, false);
   });
-  
-  // 15-16 split into single
-  addUnit([16], 558, 645, 58, 58, false);
-  addUnit([15], 558, 708, 58, 58, false);
 
   // Rightmost column (x = 739px)
-  // 11-12 split into single
-  addUnit([12], 739, 136, 58, 58, false);
-  addUnit([11], 739, 199.5, 58, 58, false);
+  // 10-11 is a paired unit
+  addUnit([11, 10], 739, 199.5, 58, 121.5, true);
   
-  [10, 9, 8, 7, 6, 5, 4, 3].forEach((n, i) => {
-    addUnit([n], 739, 263 + i * 63.5, 58, 58, false);
+  [9, 8, 7, 6, 5, 4, 3].forEach((n, i) => {
+    addUnit([n], 739, 326.5 + i * 63.5, 58, 58, false);
   });
   
   // 1-2 remains paired

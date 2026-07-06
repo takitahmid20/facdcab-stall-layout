@@ -79,7 +79,7 @@ export default function Annotation() {
       {/* Entry — bottom-middle of floor plan */}
       <div style={{
         ...annotBase,
-        left: '435px', top: '831px', width: '58px', height: '58px',
+        left: '558px', top: '831px', width: '58px', height: '58px',
         fontSize: '10px',
         fontWeight: '700',
         color: '#475569',

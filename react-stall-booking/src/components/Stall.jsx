@@ -35,11 +35,11 @@ export default function Stall({ unit, onClick }) {
     else if (id === 'u41-42') { firstNum = 42; secondNum = 41; }
     else if (id === 'u13-14') { firstNum = 14; secondNum = 13; }
     else if (id === 'u1-2') { firstNum = 2; secondNum = 1; }
-    else if (id === 'u11-12') { firstNum = 12; secondNum = 11; }
+    else if (id === 'u10-11') { firstNum = 11; secondNum = 10; }
     else if (id === 'u15-16') { firstNum = 16; secondNum = 15; }
     else if (id === 'u22-23') { firstNum = 23; secondNum = 22; }
     else if (id === 'u49-50') { firstNum = 50; secondNum = 49; }
-    else if (id === 'u39-40') { firstNum = 40; secondNum = 39; }
+    else if (id === 'u35-36') { firstNum = 36; secondNum = 35; }
     else if (id === 'u34-35') { firstNum = 35; secondNum = 34; }
     else if (id === 'u24-25') { firstNum = 24; secondNum = 25; }
     else if (id === 'u32-33') { firstNum = 32; secondNum = 33; }
@@ -69,6 +69,96 @@ export default function Stall({ unit, onClick }) {
     statusClasses = 'stripe-held-other border-[#f59e0b] text-[#b45309] font-bold cursor-not-allowed';
   } else if (status === 'booked') {
     statusClasses = 'stripe-booked border-[#94a3b8] text-[#475569] font-bold cursor-not-allowed';
+  }
+
+  if (id === 'u12-13-14') {
+    return (
+      <div
+        className="absolute select-none pointer-events-none z-10"
+        style={style}
+        title={getTooltip()}
+      >
+        {/* Stall 14 (Left - Square Box) */}
+        <div
+          className={`${baseClasses} ${statusClasses} pointer-events-auto`}
+          style={{
+            position: 'absolute',
+            left: '0px',
+            top: '0px',
+            width: '58px',
+            height: '58px',
+            borderRight: 'none',
+            borderTopRightRadius: '0px',
+            borderBottomRightRadius: '0px'
+          }}
+          onClick={handleStallClick}
+        >
+          <div className="w-full h-full relative">
+            <div className="absolute top-0 bottom-0 right-0 border-r border-dashed border-current/30"></div>
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="font-space-mono text-[11px] font-bold leading-none">14</div>
+              <div className="font-montserrat text-[8.5px] font-semibold mt-0.5 opacity-70">{fmtBDT(80000)}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stall 13 (Aisle 2 Right Corner - Square Box) */}
+        <div
+          className={`${baseClasses} ${statusClasses} pointer-events-auto`}
+          style={{
+            position: 'absolute',
+            left: '58px',
+            top: '0px',
+            width: '58px',
+            height: '58px',
+            borderLeft: 'none',
+            borderBottom: 'none',
+            borderTopLeftRadius: '0px',
+            borderBottomLeftRadius: '0px',
+            borderBottomRightRadius: '0px'
+          }}
+          onClick={handleStallClick}
+        >
+          <div className="font-space-mono text-[11px] font-bold leading-none">13</div>
+          <div className="font-montserrat text-[8.5px] font-semibold mt-0.5 opacity-70">{fmtBDT(80000)}</div>
+        </div>
+
+        {/* Stall 12 (Right Column Top - Square Box) */}
+        <div
+          className={`${baseClasses} ${statusClasses} pointer-events-auto`}
+          style={{
+            position: 'absolute',
+            left: '58px',
+            top: '58px',
+            width: '58px',
+            height: '58px',
+            borderTop: 'none',
+            borderTopLeftRadius: '0px',
+            borderTopRightRadius: '0px'
+          }}
+          onClick={handleStallClick}
+        >
+          <div className="w-full h-full relative">
+            <div className="absolute top-0 left-0 right-0 border-t border-dashed border-current/30"></div>
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="font-space-mono text-[11px] font-bold leading-none">12</div>
+              <div className="font-montserrat text-[8.5px] font-semibold mt-0.5 opacity-70">{fmtBDT(80000)}</div>
+            </div>
+          </div>
+        </div>
+
+        {status === 'held-other' && (
+          <div className="absolute top-[8px] right-[8px] font-space-mono text-[8px] font-bold text-amber-600 z-30 pointer-events-none bg-white px-1 py-0.5 rounded border border-amber-300">
+            {holdRemaining}s
+          </div>
+        )}
+        {status === 'held-mine' && (
+          <div id="miniTimerMine" className="absolute top-[8px] right-[8px] font-space-mono text-[8px] font-bold text-white z-30 pointer-events-none bg-blue-600 px-1 py-0.5 rounded">
+            {holdRemaining}s
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (
