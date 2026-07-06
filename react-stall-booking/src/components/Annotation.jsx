@@ -55,7 +55,7 @@ export default function Annotation() {
       {/* Service Door — left side, vertical text */}
       <div style={{
         ...annotBase,
-        left: '11.5px', top: '204px', width: '35px', height: '58px',
+        left: '11.5px', top: '252px', width: '35px', height: '58px',
         writingMode: 'vertical-rl',
         fontSize: '8.5px',
         border: '1px solid #e2e8f0',

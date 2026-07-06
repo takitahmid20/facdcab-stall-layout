@@ -51,67 +51,58 @@ function buildInitialUnits() {
   }
 
   // left column (col 0): x = 0px
-  // 51-52 remains paired
-  addUnit([52, 51], 0, 78, 58, 121, true);
+  // 54-55-56 is a triple L-shape corner block
+  addUnit([54, 55, 56], 0, 78, 116, 116, true);
   
-  // 49-50 split into single
-  addUnit([50], 0, 267, 58, 58, false);
-  addUnit([49], 0, 330, 58, 58, false);
+  addUnit([53], 0, 194, 58, 58, false);
   
-  addUnit([48], 0, 393, 58, 58, false);
-  addUnit([47], 0, 456, 58, 58, false);
-  addUnit([46], 0, 519, 58, 58, false);
-  addUnit([45], 0, 582, 58, 58, false);
-  addUnit([44], 0, 645, 58, 58, false);
-  addUnit([43], 0, 708, 58, 58, false);
+  // 51-52 is a vertical pair
+  addUnit([51, 52], 0, 310, 58, 116, true);
   
-  // 41-42 split into single
-  addUnit([42], 0, 771, 58, 58, false);
-  addUnit([41], 0, 834, 58, 58, false);
+  [50, 49, 48, 47, 46].forEach((n, i) => {
+    addUnit([n], 0, 426 + i * 58, 58, 58, false);
+  });
+  
+  // 44-45 is a vertical pair
+  addUnit([44, 45], 0, 716, 58, 116, true);
+
+  // 41-42-43 is a triple L-shape corner pair
+  addUnit([43, 42, 41], 0, 832, 116, 116, true);
 
   // top horizontal row: y = 78px
-  // 53-54 split into single
-  addUnit([53], 123, 78, 58, 58, false);
-  addUnit([54], 186, 78, 58, 58, false);
-  
-  addUnit([55], 249, 78, 58, 58, false);
-  addUnit([56], 312, 78, 58, 58, false);
-  
-  // 57-58 split into single
-  addUnit([57], 375, 78, 58, 58, false);
-  addUnit([58], 438, 78, 58, 58, false);
+  // 57-58 is a horizontal pair
+  addUnit([57, 58], 121, 78, 121, 58, true);
+  addUnit([59], 248, 78, 58, 58, false);
+  addUnit([60], 311, 78, 58, 58, false);
+  // 61-62 is a horizontal pair
+  addUnit([61, 62], 374, 78, 121, 58, true);
 
-  // middle clusters — all split into single stalls
+  // middle clusters — all paired as 2x2 grids
   const clusterRows = [
-    { top: 204, bottom: 267, nums: [59, 60, 61, 62, 63, 64, 65, 66] },
-    { top: 350, bottom: 413, nums: [67, 68, 69, 70, 71, 72, 73, 74] },
-    { top: 496, bottom: 559, nums: [75, 76, 77, 78, 79, 80, 81, 82] },
-    { top: 642, bottom: 705, nums: [83, 84, 85, 86, 87, 88, 89, 90] }
+    { top: 204, bottom: 267, pairs: [[65, 66], [63, 64], [67, 68], [69, 70]] },
+    { top: 350, bottom: 413, pairs: [[71, 72], [73, 74], [75, 76], [77, 78]] },
+    { top: 496, bottom: 559, pairs: [[81, 82], [79, 80], [83, 84], [85, 86]] },
+    { top: 642, bottom: 705, pairs: [[89, 90], [87, 88], [91, 92], [93, 94]] }
   ];
   clusterRows.forEach(c => {
-    addUnit([c.nums[0]], 123, c.top, 58, 58, false);
-    addUnit([c.nums[1]], 186, c.top, 58, 58, false);
-    addUnit([c.nums[2]], 249, c.top, 58, 58, false);
-    addUnit([c.nums[3]], 312, c.top, 58, 58, false);
-    addUnit([c.nums[4]], 123, c.bottom, 58, 58, false);
-    addUnit([c.nums[5]], 186, c.bottom, 58, 58, false);
-    addUnit([c.nums[6]], 249, c.bottom, 58, 58, false);
-    addUnit([c.nums[7]], 312, c.bottom, 58, 58, false);
+    addUnit(c.pairs[0], 123, c.top, 121, 58, true);
+    addUnit(c.pairs[1], 249, c.top, 121, 58, true);
+    addUnit(c.pairs[2], 123, c.bottom, 121, 58, true);
+    addUnit(c.pairs[3], 249, c.bottom, 121, 58, true);
   });
 
-  // bottom horizontal row: y = 892px
-  // 39-40 split into single
-  addUnit([40], 58, 892, 58, 58, false);
-  addUnit([39], 121, 892, 58, 58, false);
-  addUnit([38], 184, 892, 58, 58, false);
-  addUnit([37], 247, 892, 58, 58, false);
+  // bottom horizontal row: y = 892px (shifted right for 41-42-43)
+  addUnit([40], 121, 892, 58, 58, false);
+  addUnit([39], 184, 892, 58, 58, false);
+  addUnit([38], 247, 892, 58, 58, false);
+  addUnit([37], 310, 892, 58, 58, false);
   
-  // 35-36 paired
-  addUnit([35, 36], 310, 892, 121, 58, true);
+  // 35-36 remains paired
+  addUnit([35, 36], 373, 892, 121, 58, true);
 
-  // Aisle 1 column (x = 435px)
+  // Aisle 1 column (x = 495px, tiny 5px gap with Aisle 2)
   [25, 26, 27, 28, 29, 30, 31, 32, 33, 34].forEach((n, i) => {
-    addUnit([n], 435, 204 + i * 63, 58, 58, false);
+    addUnit([n], 495, 204 + i * 63, 58, 58, false);
   });
 
   // Aisle 2 Top Corner: y = 78px
