@@ -298,9 +298,9 @@ export default function App() {
       params.append('total_amount', String(totalAmount));
       params.append('currency', 'BDT');
       params.append('tran_id', orderId);
-      params.append('success_url', `${window.location.origin}/payment-success`);
-      params.append('fail_url', `${window.location.origin}/payment-fail`);
-      params.append('cancel_url', `${window.location.origin}/payment-cancel`);
+      params.append('success_url', `${window.location.origin}/api/callback?status=success`);
+      params.append('fail_url', `${window.location.origin}/api/callback?status=fail`);
+      params.append('cancel_url', `${window.location.origin}/api/callback?status=cancel`);
       
       params.append('cus_name', formData.name);
       params.append('cus_email', formData.email);
@@ -313,7 +313,7 @@ export default function App() {
       params.append('product_category', 'Stall');
       params.append('product_profile', 'general');
 
-      const response = await fetch('/initiate-payment', {
+      const response = await fetch('/api/initiate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
