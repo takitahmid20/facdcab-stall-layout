@@ -100,12 +100,22 @@ export default function Annotation() {
         <span style={{ border: '1px solid #e2e8f0', padding: '2px 5px', background: '#f8fafc' }}>Entry</span>
       </div>
 
-      {/* South label — top of middle cluster, rotated 180° */}
+      {/* South label — top of middle cluster, rotated 180° so text reads right-to-left from hall entry side */}
       <div style={{
-        ...annotBase,
-        left: '123px', top: '45px', width: '400px', height: '20px',
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontFamily: "'Space Mono', monospace",
+        fontSize: '10.5px',
+        letterSpacing: '.06em',
         fontStyle: 'italic',
         color: '#475569',
+        left: '123px',
+        top: '45px',
+        width: '400px',
+        height: '20px',
         transform: 'rotate(180deg)',
       }}>
         South
@@ -113,12 +123,22 @@ export default function Annotation() {
 
       {/* North label — bottom of hall, rotated 180° */}
       <div style={{
-        ...annotBase,
-        left: '123px', top: '1015px', width: '400px', height: '30px',
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontFamily: "'Space Mono', monospace",
+        fontSize: '10.5px',
+        letterSpacing: '.06em',
         fontStyle: 'italic',
         color: '#475569',
-        transform: 'rotate(180deg)',
         lineHeight: '1.2',
+        left: '123px',
+        top: '1015px',
+        width: '400px',
+        height: '30px',
+        transform: 'rotate(180deg)',
       }}>
         69'<br />North
       </div>

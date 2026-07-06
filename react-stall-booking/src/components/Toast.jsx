@@ -4,7 +4,7 @@ export default function Toast({ toasts }) {
   if (!toasts || toasts.length === 0) return null;
 
   return (
-    <div id="toastWrap" className="fixed bottom-6 right-6 z-[600] flex flex-col gap-2 items-end">
+    <div id="toastWrap" className="fixed top-6 left-1/2 -translate-x-1/2 z-[600] flex flex-col gap-2 items-center">
       {toasts.map((toast) => (
         <div
           key={toast.id}
