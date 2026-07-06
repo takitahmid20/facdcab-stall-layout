@@ -62,13 +62,13 @@ export default function Stall({ unit, onClick }) {
   
   let statusClasses = '';
   if (status === 'available') {
-    statusClasses = 'bg-green-50 border-green-400/40 text-green-800 hover:bg-green-100 hover:border-green-500 hover:scale-[1.04] hover:z-20 hover:shadow-[0_4px_12px_rgba(16,185,129,0.2)]';
+    statusClasses = 'bg-[#eefcf5] border-[#22c55e] text-[#15803d] hover:bg-[#dcfce7] hover:border-[#16a34a] hover:scale-[1.04] hover:z-20 hover:shadow-[0_4px_12px_rgba(34,197,94,0.15)]';
   } else if (status === 'held-mine') {
-    statusClasses = 'bg-gradient-to-br from-[#155dfc] to-[#4f39f6] border-white/30 text-white shadow-[0_4px_14px_rgba(21,93,252,0.35)] scale-[1.04] z-20';
+    statusClasses = 'bg-[#155dfc] border-[#155dfc] text-white shadow-[0_4px_14px_rgba(21,93,252,0.25)] scale-[1.04] z-20';
   } else if (status === 'held-other') {
-    statusClasses = 'stripe-held-other border-amber-400/40 text-amber-700 cursor-not-allowed';
+    statusClasses = 'stripe-held-other border-[#f59e0b] text-[#b45309] font-bold cursor-not-allowed';
   } else if (status === 'booked') {
-    statusClasses = 'stripe-booked border-slate-300 text-slate-400 cursor-not-allowed opacity-80';
+    statusClasses = 'stripe-booked border-[#94a3b8] text-[#475569] font-bold cursor-not-allowed';
   }
 
   return (

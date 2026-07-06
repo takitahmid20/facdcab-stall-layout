@@ -165,7 +165,6 @@ export default function App() {
   const [confirmData, setConfirmData] = useState(null);
   const [toasts, setToasts] = useState([]);
 
-  // Handle payment response redirection parameters on page load
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const payStatus = urlParams.get('payment_status');
@@ -181,25 +180,16 @@ export default function App() {
           const updatedBooked = [...new Set([...localBooked, ...order.stallIds])];
           localStorage.setItem('booked_stalls_store', JSON.stringify(updatedBooked));
 
-          // Set units state immediately
-          setUnits((prev) =>
-            prev.map((u) => (order.stallIds.includes(u.id) ? { ...u, status: 'booked', holdRemaining: 0 } : u))
-          );
-          
-          setConfirmData({
-            stallLabel: order.stallLabel,
-            email: order.email,
-            amount: order.amount,
-            name: order.name,
-          });
-          setConfirmOpen(true);
-          addToast(`Stalls ${order.stallLabel} booked successfully!`);
+          // Redirect to invoice success page
+          window.location.href = `/success?tran_id=${tranId || ''}&amount=${urlParams.get('amount') || order.amount}&bank_tran_id=${urlParams.get('bank_tran_id') || ''}`;
+          return;
         } else if (payStatus === 'fail') {
           addToast(`Payment failed for Stalls ${order.stallLabel}. Please try again.`);
+          localStorage.removeItem('pending_stall_order');
         } else if (payStatus === 'cancel') {
           addToast(`Payment cancelled for Stalls ${order.stallLabel}.`);
+          localStorage.removeItem('pending_stall_order');
         }
-        localStorage.removeItem('pending_stall_order');
       }
       // Clean query params from URL without refreshing page
       window.history.replaceState({}, document.title, window.location.pathname);
