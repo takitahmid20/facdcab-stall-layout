@@ -1,53 +1,126 @@
 import React from 'react';
 
+/**
+ * Annotation.jsx — floor plan overlay labels & outlines
+ * All positions are lifted directly from the original static prototype CSS:
+ *
+ *  .hall-outline   : left:-2px; top:76px; width:801px; height:876px
+ *  .annot.washroom : left:558px; top:15px; width:239px; height:58px
+ *  .annot.servicedoor: left:11.5px; top:204px; width:35px; height:58px
+ *  .annot.exittop  : left:558px; top:141px; width:35px; height:58px
+ *  .annot.entrybottom: left:435px; top:831px; width:58px; height:58px
+ *  .annot.entryexit: left:558px; top:952px; width:150px; height:58px
+ *  .annot.southlbl : left:123px; top:45px; width:400px; height:20px (rotated 180°)
+ *  .annot.northlbl : left:123px; top:1015px; width:400px; height:30px (rotated 180°)
+ */
+
+const annotBase = {
+  position: 'absolute',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  fontFamily: "'Space Mono', monospace",
+  color: '#94a3b8',
+  fontSize: '10.5px',
+  letterSpacing: '.06em',
+};
+
 export default function Annotation() {
   return (
     <>
-      {/* Hall outline border */}
-      <div style={{ position: 'absolute', inset: 0, border: '3px solid #94a3b8', borderRadius: '4px', pointerEvents: 'none', zIndex: 0 }} />
+      {/* Hall border outline */}
+      <div style={{
+        position: 'absolute', left: '-2px', top: '76px',
+        width: '801px', height: '876px',
+        border: '2px solid #e2e8f0',
+        pointerEvents: 'none',
+        zIndex: 1,
+        borderRadius: '4px',
+      }} />
 
-      {/* Washroom */}
-      <div style={{ position: 'absolute', left: '744px', top: '78px', width: '126px', height: '184px' }}
-           className="flex items-center justify-center bg-slate-100 border border-slate-300 rounded text-[10px] font-bold text-slate-500 font-space-mono tracking-widest uppercase">
+      {/* Wash Room — top right */}
+      <div style={{
+        ...annotBase,
+        left: '558px', top: '15px', width: '239px', height: '58px',
+        border: '1px solid #e2e8f0',
+        background: '#f8fafc',
+        color: '#475569',
+        fontWeight: '700',
+        letterSpacing: '.12em',
+      }}>
         Wash Room
       </div>
 
-      {/* Service Door */}
-      <div style={{ position: 'absolute', left: '744px', top: '330px', width: '126px', height: '63px' }}
-           className="flex items-center justify-center bg-slate-50 border border-slate-300 rounded text-[10px] font-bold text-slate-500 font-space-mono tracking-widest uppercase text-center">
-        Service<br />Door
+      {/* Service Door — left side, vertical text */}
+      <div style={{
+        ...annotBase,
+        left: '11.5px', top: '204px', width: '35px', height: '58px',
+        writingMode: 'vertical-rl',
+        fontSize: '8.5px',
+        border: '1px solid #e2e8f0',
+        background: '#f8fafc',
+      }}>
+        Service Door
       </div>
 
-      {/* Entry bottom */}
-      <div style={{ position: 'absolute', left: '58px', top: '956px', width: '315px', height: '40px' }}
-           className="flex items-center justify-center bg-green-50 border border-green-300 rounded text-[11px] font-bold text-green-700 font-space-mono tracking-widest uppercase">
-        Entry
-      </div>
-
-      {/* Exit top */}
-      <div style={{ position: 'absolute', left: '123px', top: '20px', width: '250px', height: '40px' }}
-           className="flex items-center justify-center bg-red-50 border border-red-300 rounded text-[11px] font-bold text-red-600 font-space-mono tracking-widest uppercase">
+      {/* Exit — right side between washroom and stalls, vertical text */}
+      <div style={{
+        ...annotBase,
+        left: '558px', top: '141px', width: '35px', height: '58px',
+        writingMode: 'vertical-rl',
+        fontSize: '9.5px',
+        border: '1px solid #e2e8f0',
+        background: '#f8fafc',
+      }}>
         Exit
       </div>
 
-      {/* South label */}
-      <div style={{ position: 'absolute', left: '744px', top: '706px', width: '126px', height: '58px' }}
-           className="flex items-center justify-center bg-slate-50 border border-slate-200 rounded text-[11px] font-bold text-slate-500 font-space-mono tracking-widest uppercase">
+      {/* Entry — bottom-middle of floor plan */}
+      <div style={{
+        ...annotBase,
+        left: '435px', top: '831px', width: '58px', height: '58px',
+        fontSize: '10px',
+        fontWeight: '700',
+        color: '#475569',
+        border: '1px solid #e2e8f0',
+        background: '#f8fafc',
+      }}>
+        Entry
+      </div>
+
+      {/* Exit + Entry pair — bottom right */}
+      <div style={{
+        ...annotBase,
+        left: '558px', top: '952px', width: '150px', height: '58px',
+        gap: '6px',
+        fontSize: '9px',
+      }}>
+        <span style={{ border: '1px solid #e2e8f0', padding: '2px 5px', background: '#f8fafc' }}>Exit</span>
+        <span style={{ border: '1px solid #e2e8f0', padding: '2px 5px', background: '#f8fafc' }}>Entry</span>
+      </div>
+
+      {/* South label — top of middle cluster, rotated 180° */}
+      <div style={{
+        ...annotBase,
+        left: '123px', top: '45px', width: '400px', height: '20px',
+        fontStyle: 'italic',
+        color: '#475569',
+        transform: 'rotate(180deg)',
+      }}>
         South
       </div>
 
-      {/* North label */}
-      <div style={{ position: 'absolute', left: '744px', top: '830px', width: '126px', height: '120px' }}
-           className="flex flex-col items-center justify-center bg-slate-50 border border-slate-200 rounded text-[11px] font-bold text-slate-500 font-space-mono tracking-widest uppercase text-center gap-1">
-        <span>69'</span>
-        <span>North</span>
-      </div>
-
-      {/* Entry/Exit pair row at right side */}
-      <div style={{ position: 'absolute', left: '435px', top: '956px', width: '185px', height: '40px' }}
-           className="flex items-center justify-around bg-slate-50 border border-slate-200 rounded text-[10px] font-bold text-slate-500 font-space-mono tracking-widest uppercase">
-        <span className="text-red-500">Exit</span>
-        <span className="text-green-600">Entry</span>
+      {/* North label — bottom of hall, rotated 180° */}
+      <div style={{
+        ...annotBase,
+        left: '123px', top: '1015px', width: '400px', height: '30px',
+        fontStyle: 'italic',
+        color: '#475569',
+        transform: 'rotate(180deg)',
+        lineHeight: '1.2',
+      }}>
+        69'<br />North
       </div>
     </>
   );

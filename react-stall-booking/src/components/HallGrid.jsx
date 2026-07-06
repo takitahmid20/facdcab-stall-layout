@@ -10,7 +10,7 @@ export default function HallGrid({ units, onStallClick }) {
       const viewport = document.querySelector('.plan-viewport');
       if (!card || !frame || !viewport) return;
 
-      const targetWidth = 870;
+      const targetWidth = 797;
       const style = window.getComputedStyle(card);
       const paddingLeft = parseFloat(style.paddingLeft) || 0;
       const paddingRight = parseFloat(style.paddingRight) || 0;
@@ -21,7 +21,7 @@ export default function HallGrid({ units, onStallClick }) {
       frame.style.transform = `scale(${scale})`;
       frame.style.transformOrigin = 'top center';
 
-      const baseHeight = 1080;
+      const baseHeight = 1100;
       viewport.style.height = `${baseHeight * scale}px`;
     }
 
@@ -56,7 +56,7 @@ export default function HallGrid({ units, onStallClick }) {
                style={{ right: '-50px', top: '50%', transform: 'translateY(-50%) rotate(-90deg)', transformOrigin: 'center' }}>
             118'
           </div>
-          <div className="hall-grid relative" id="hallGrid" style={{ width: '870px', height: '1000px' }}>
+          <div className="hall-grid relative" id="hallGrid" style={{ width: '797px', height: '1060px', margin: '20px auto' }}>
             <Annotation />
             {units.map((unit) => (
               <Stall key={unit.id} unit={unit} onClick={onStallClick} />
