@@ -1,7 +1,7 @@
 import React from 'react';
 import { fmtBDT } from './Stall';
 
-export default function DescriptionCard({ selectedUnit, onBookClick, onReleaseClick }) {
+export default function DescriptionCard({ selectedUnit, onBookClick, onReleaseClick, isEditorMode = false, onSplitClick = () => {} }) {
   return (
     <div className={`bg-white rounded-xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-montserrat ${selectedUnit ? 'border-l-4 border-l-brand-blue border border-slate-200' : 'border border-slate-200'}`}>
       <h3 className="text-[13.5px] font-bold text-slate-700 tracking-wide uppercase mb-3">Stall Summary</h3>
@@ -18,12 +18,12 @@ export default function DescriptionCard({ selectedUnit, onBookClick, onReleaseCl
           </div>
           <div className="flex justify-between items-center text-[13px] border-b border-slate-200/50 pb-2">
             <span className="text-slate-500 font-medium">Stall Size:</span>
-            <span className="text-slate-700 font-semibold">{selectedUnit.nums?.length > 1 ? "16' × 8'" : "8' × 8'"}</span>
+            <span className="text-slate-700 font-semibold">{selectedUnit.nums?.length > 1 ? `${selectedUnit.nums.length * 8}' × 8'` : "8' × 8'"}</span>
           </div>
           <div className="flex justify-between items-center text-[13px] border-b border-slate-200/50 pb-2">
             <span className="text-slate-500 font-medium">Stall Type:</span>
             <span className="text-slate-700 font-semibold">
-              {selectedUnit.isCorner ? 'Merged Corner Pair' : selectedUnit.nums?.length > 1 ? 'Combined Pair' : 'Standard Stall'}
+              {selectedUnit.isCorner ? 'Corner Layout' : selectedUnit.nums?.length > 1 ? 'Combined Stalls' : 'Standard Stall'}
             </span>
           </div>
           <div className="flex justify-between items-center text-[13px] border-b border-slate-200/50 pb-2">
@@ -46,7 +46,17 @@ export default function DescriptionCard({ selectedUnit, onBookClick, onReleaseCl
             )}
           </div>
 
-          {selectedUnit.status === 'held-mine' && (
+          {/* Split button for Combined Stalls under Editor Mode */}
+          {isEditorMode && selectedUnit.nums?.length > 1 && (
+            <button
+              className="mt-3.5 w-full py-2.5 rounded-lg text-[12px] font-bold border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 hover:border-red-300 transition-all duration-150 cursor-pointer"
+              onClick={onSplitClick}
+            >
+              ✂️ Split Combined Stall
+            </button>
+          )}
+
+          {!isEditorMode && selectedUnit.status === 'held-mine' && (
             <div className="mt-3.5 flex gap-2">
               <button
                 className="flex-1 py-2.5 rounded-lg text-[12px] font-bold border border-slate-300 text-slate-600 bg-white hover:bg-slate-50 hover:border-slate-400 transition-all duration-150 cursor-pointer"
