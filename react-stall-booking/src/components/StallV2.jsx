@@ -16,7 +16,7 @@ export default function StallV2({
   isMergeTarget = false,
   onDragStart = () => {}
 }) {
-  const { id, label, nums, price, left, top, width, height, isCorner, status, holdRemaining } = unit;
+  const { id, label, nums = [], price = 0, left, top, width, height, isCorner, status, holdRemaining, type, isVertical: isVerticalAnnot } = unit;
 
   const style = {
     position: 'absolute',
@@ -27,6 +27,9 @@ export default function StallV2({
   };
 
   const getTooltip = () => {
+    if (type === 'annotation') {
+      return isEditorMode ? `Annotation: ${label} — drag to reposition, click to edit` : '';
+    }
     if (isEditorMode) return `Stall ${label} — drag to reposition, drop on another to merge`;
     if (status === 'booked') return `Stall ${label} — already booked`;
     if (status === 'held-other') return `Stall ${label} — on hold by another visitor (${holdRemaining}s left)`;
@@ -34,6 +37,50 @@ export default function StallV2({
     return `Stall ${label} — available, ${fmtBDT(price)}${nums.length > 1 ? ' (combined pair)' : ''}`;
   };
 
+  const handleStallClick = () => {
+    onClick(id);
+  };
+
+  if (type === 'annotation') {
+    const annotStyle = {
+      ...style,
+      border: isEditorMode ? '2px dashed #cbd5e1' : '1px solid #cbd5e1',
+      background: '#f8fafc',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: 'Montserrat, sans-serif',
+      fontSize: '9.5px',
+      fontWeight: 'bold',
+      color: '#475569',
+      textAlign: 'center',
+      borderRadius: '4px',
+      userSelect: 'none',
+      writingMode: isVerticalAnnot ? 'vertical-rl' : 'horizontal-tb',
+      zIndex: 5,
+    };
+
+    let annotClasses = 'transition-all duration-150 overflow-hidden';
+    if (isEditorMode) {
+      annotClasses += isBeingDragged
+        ? ' cursor-grabbing opacity-75 border-amber-500 bg-amber-50 shadow-md'
+        : ' cursor-grab hover:border-brand-blue hover:bg-slate-50';
+    } else {
+      annotClasses += ' pointer-events-none';
+    }
+
+    return (
+      <div
+        className={annotClasses}
+        style={annotStyle}
+        onClick={handleStallClick}
+        onMouseDown={isEditorMode ? (e) => onDragStart(e) : undefined}
+        title={getTooltip()}
+      >
+        {label}
+      </div>
+    );
+  }
   let firstNum = nums[0];
   let secondNum = nums[1] || nums[0];
   if (isCorner) {
@@ -56,10 +103,6 @@ export default function StallV2({
   const splitDivider = status === 'held-mine'
     ? (isVertical ? { borderBottom: '1px dashed rgba(255,255,255,0.4)' } : { borderRight: '1px dashed rgba(255,255,255,0.4)' })
     : (isVertical ? { borderBottom: '1px dashed #e2e8f0' } : { borderRight: '1px dashed #e2e8f0' });
-
-  const handleStallClick = () => {
-    onClick(id);
-  };
 
   let baseClasses = 'absolute flex flex-col items-center justify-center text-center rounded-[4px] border transition-all duration-150 select-none overflow-hidden z-10';
   

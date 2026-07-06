@@ -153,6 +153,52 @@ function buildInitialUnits() {
   // 1-2 remains paired
   addUnit([2, 1], 739, 771, 58, 121, true);
 
+  // Add default annotations
+  units.push({
+    id: 'a-entry-exit',
+    type: 'annotation',
+    label: 'ENTRY / EXIT',
+    left: 495,
+    top: 952,
+    width: 121,
+    height: 58,
+    isVertical: false,
+    status: 'available',
+  });
+  units.push({
+    id: 'a-service-door',
+    type: 'annotation',
+    label: 'Service Door',
+    left: 11.5,
+    top: 252,
+    width: 35,
+    height: 58,
+    isVertical: true,
+    status: 'available',
+  });
+  units.push({
+    id: 'a-entry',
+    type: 'annotation',
+    label: 'ENTRY',
+    left: 558,
+    top: 831,
+    width: 58,
+    height: 58,
+    isVertical: false,
+    status: 'available',
+  });
+  units.push({
+    id: 'a-washroom',
+    type: 'annotation',
+    label: 'WASHROOM',
+    left: 739,
+    top: 20,
+    width: 58,
+    height: 58,
+    isVertical: false,
+    status: 'available',
+  });
+
   return units;
 }
 
@@ -173,9 +219,15 @@ export default function AppV2() {
 
   // Stats calculation
   const stats = {
-    available: units.filter((u) => u.status === 'available').length,
-    onHold: units.filter((u) => u.status === 'held-mine' || u.status === 'held-other').length,
-    booked: units.filter((u) => u.status === 'booked').length,
+    available: units.filter((u) => u.type !== 'annotation' && u.status === 'available').length,
+    onHold: units.filter((u) => u.type !== 'annotation' && (u.status === 'held-mine' || u.status === 'held-other')).length,
+    booked: units.filter((u) => u.type !== 'annotation' && u.status === 'booked').length,
+  };
+
+  const updateSelectedAnnot = (field, value) => {
+    setUnits((prev) =>
+      prev.map((u) => (u.id === selectedUnitId ? { ...u, [field]: value } : u))
+    );
   };
 
   // Toast helper
@@ -207,12 +259,53 @@ export default function AppV2() {
     dropX = Math.round(dropX / 5) * 5;
     dropY = Math.round(dropY / 5) * 5;
 
+    // Handle dynamic annotations
+    if (stallType.startsWith('annot-')) {
+      let label = 'LABEL';
+      let width = 100;
+      let height = 50;
+      let isVertical = false;
+
+      if (stallType === 'annot-entry') {
+        label = 'ENTRY';
+      } else if (stallType === 'annot-exit') {
+        label = 'EXIT';
+      } else if (stallType === 'annot-washroom') {
+        label = 'WASHROOM';
+        width = 70;
+        height = 70;
+      } else if (stallType === 'annot-servicedoor') {
+        label = 'Service Door';
+        width = 35;
+        height = 58;
+        isVertical = true;
+      }
+
+      const id = 'annot-' + Date.now();
+      const newUnit = {
+        id,
+        type: 'annotation',
+        label,
+        left: Math.max(0, Math.min(797 - width, dropX)),
+        top: Math.max(0, Math.min(1060 - height, dropY)),
+        width,
+        height,
+        isVertical,
+        status: 'available',
+      };
+
+      setUnits(prev => [...prev, newUnit]);
+      setSelectedUnitId(id);
+      addToast(`Added new Annotation Label (${label}) to layout.`);
+      return;
+    }
+
     let width = 58;
     let height = 58;
     let nums = [];
     let isCorner = false;
 
-    const allStallNums = units.flatMap(u => u.nums);
+    const allStallNums = units.flatMap(u => u.nums || []);
     const maxStallNum = allStallNums.length > 0 ? Math.max(...allStallNums) : 0;
 
     if (stallType === 'single') {
@@ -299,12 +392,12 @@ export default function AppV2() {
 
       // Check for overlap merge candidates dynamically
       const dragged = units.find((u) => u.id === activeDragId);
-      if (dragged) {
+      if (dragged && dragged.type !== 'annotation') {
         let bestTarget = null;
         let maxOverlap = 0;
 
         units.forEach((u) => {
-          if (u.id === activeDragId) return;
+          if (u.id === activeDragId || u.type === 'annotation') return;
           const xOverlap = Math.max(
             0,
             Math.min(nextLeft + dragged.width, u.left + u.width) - Math.max(nextLeft, u.left)
@@ -680,81 +773,157 @@ export default function AppV2() {
           {isEditorMode ? (
             <>
               {selectedUnit ? (
-                /* Stall Editor Card */
-                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] font-montserrat">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider font-semibold">Stall Editor</span>
-                    <button
-                      className="text-slate-400 hover:text-slate-600 text-xs font-bold border-0 bg-transparent cursor-pointer"
-                      onClick={() => setSelectedUnitId(null)}
-                    >
-                      Deselect
-                    </button>
-                  </div>
-                  <div className="text-[18px] font-extrabold text-slate-800 mb-1">{selectedUnit.label}</div>
-                  <div className="text-[12px] text-slate-500 mb-4">{selectedUnit.nums.length > 1 ? `${selectedUnit.nums.length}-Stall Combined Block` : 'Single Stall Block'}</div>
-                  
-                  <div className="mb-4">
-                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1.5">Stall Number(s)</label>
-                    <input
-                      type="text"
-                      value={selectedUnit.nums.join(', ')}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        const parsedNums = val.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
-                        if (parsedNums.length > 0) {
-                          setUnits(prev => prev.map(u => u.id === selectedUnit.id ? {
-                            ...u,
-                            nums: parsedNums,
-                            label: parsedNums.join(' · '),
-                            id: 'u' + parsedNums.slice().sort((a,b)=>a-b).join('-')
-                          } : u));
-                          setSelectedUnitId('u' + parsedNums.slice().sort((a,b)=>a-b).join('-'));
-                        }
-                      }}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-[13px] font-medium focus:outline-none focus:border-[#155dfc]"
-                      placeholder="e.g. 23, 24"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    {selectedUnit.nums.length > 1 && (
+                selectedUnit.type === 'annotation' ? (
+                  /* Annotation Editor Card */
+                  <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] font-montserrat">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider font-semibold">Annotation Editor</span>
                       <button
-                        onClick={() => handleSplitStall(selectedUnit.id)}
-                        className="w-full py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[12px] rounded-lg border border-indigo-200 transition-all cursor-pointer"
+                        className="text-slate-400 hover:text-slate-600 text-xs font-bold border-0 bg-transparent cursor-pointer"
+                        onClick={() => setSelectedUnitId(null)}
                       >
-                        Split Combined Unit
+                        Deselect
                       </button>
-                    )}
+                    </div>
+                    <div className="text-[18px] font-extrabold text-slate-800 mb-1">{selectedUnit.label}</div>
+                    <div className="text-[12px] text-slate-500 mb-4">Dynamic Text Label</div>
+
+                    <div className="flex flex-col gap-3.5 mb-4">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1">Label Text</label>
+                        <input
+                          type="text"
+                          value={selectedUnit.label}
+                          onChange={(e) => updateSelectedAnnot('label', e.target.value)}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-[13px] font-medium focus:outline-none focus:border-[#155dfc]"
+                          placeholder="e.g. ENTRY, EXIT, WASHROOM"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1">Width (px)</label>
+                          <input
+                            type="number"
+                            value={selectedUnit.width}
+                            onChange={(e) => updateSelectedAnnot('width', parseInt(e.target.value) || 0)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-[13px] font-medium focus:outline-none focus:border-[#155dfc]"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1">Height (px)</label>
+                          <input
+                            type="number"
+                            value={selectedUnit.height}
+                            onChange={(e) => updateSelectedAnnot('height', parseInt(e.target.value) || 0)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-[13px] font-medium focus:outline-none focus:border-[#155dfc]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <button
+                          onClick={() => updateSelectedAnnot('isVertical', !selectedUnit.isVertical)}
+                          className={`w-full py-2 rounded-lg text-[12px] font-bold border transition-all cursor-pointer ${
+                            selectedUnit.isVertical
+                              ? 'bg-amber-50 border-amber-300 text-amber-700'
+                              : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                          }`}
+                        >
+                          Orientation: {selectedUnit.isVertical ? 'Vertical Text' : 'Horizontal Text'}
+                        </button>
+                      </div>
+                    </div>
+
                     <button
                       onClick={() => {
                         setUnits(prev => prev.filter(u => u.id !== selectedUnit.id));
                         setSelectedUnitId(null);
-                        addToast(`Deleted Stall ${selectedUnit.label} from layout.`);
+                        addToast(`Deleted label "${selectedUnit.label}" from layout.`);
                       }}
                       className="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[12px] rounded-lg border border-rose-200 transition-all cursor-pointer"
                     >
-                      Delete Stall Block
+                      Delete Label
                     </button>
                   </div>
-                </div>
+                ) : (
+                  /* Stall Editor Card */
+                  <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] font-montserrat">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider font-semibold">Stall Editor</span>
+                      <button
+                        className="text-slate-400 hover:text-slate-600 text-xs font-bold border-0 bg-transparent cursor-pointer"
+                        onClick={() => setSelectedUnitId(null)}
+                      >
+                        Deselect
+                      </button>
+                    </div>
+                    <div className="text-[18px] font-extrabold text-slate-800 mb-1">{selectedUnit.label}</div>
+                    <div className="text-[12px] text-slate-500 mb-4">{selectedUnit.nums.length > 1 ? `${selectedUnit.nums.length}-Stall Combined Block` : 'Single Stall Block'}</div>
+                    
+                    <div className="mb-4">
+                      <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1.5">Stall Number(s)</label>
+                      <input
+                        type="text"
+                        value={selectedUnit.nums.join(', ')}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const parsedNums = val.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+                          if (parsedNums.length > 0) {
+                            setUnits(prev => prev.map(u => u.id === selectedUnit.id ? {
+                              ...u,
+                              nums: parsedNums,
+                              label: parsedNums.join(' · '),
+                              id: 'u' + parsedNums.slice().sort((a,b)=>a-b).join('-')
+                            } : u));
+                            setSelectedUnitId('u' + parsedNums.slice().sort((a,b)=>a-b).join('-'));
+                          }
+                        }}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-[13px] font-medium focus:outline-none focus:border-[#155dfc]"
+                        placeholder="e.g. 23, 24"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      {selectedUnit.nums.length > 1 && (
+                        <button
+                          onClick={() => handleSplitStall(selectedUnit.id)}
+                          className="w-full py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[12px] rounded-lg border border-indigo-200 transition-all cursor-pointer"
+                        >
+                          Split Combined Unit
+                        </button>
+                      )}
+                      <button
+                        onClick={() => {
+                          setUnits(prev => prev.filter(u => u.id !== selectedUnit.id));
+                          setSelectedUnitId(null);
+                          addToast(`Deleted Stall ${selectedUnit.label} from layout.`);
+                        }}
+                        className="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[12px] rounded-lg border border-rose-200 transition-all cursor-pointer"
+                      >
+                        Delete Stall Block
+                      </button>
+                    </div>
+                  </div>
+                )
               ) : (
                 /* Stall Toolbox Card */
-                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] font-montserrat">
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] font-montserrat max-h-[750px] overflow-y-auto">
                   <div className="text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-3">Stall Toolbox</div>
-                  <div className="text-[12px] text-slate-500 mb-4 font-semibold">Drag and drop these blocks onto the grid map:</div>
                   
-                  <div className="flex flex-col gap-3 mb-6">
+                  {/* Stalls Category */}
+                  <div className="text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-2">Booth Templates</div>
+                  <div className="flex flex-col gap-2.5 mb-5">
                     {/* Draggable Single */}
                     <div
                       draggable
                       onDragStart={(e) => handleToolboxDragStart(e, 'single')}
-                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                      className="flex items-center gap-3 p-2.5 bg-emerald-50/30 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
                     >
-                      <div className="w-10 h-10 border border-emerald-200 rounded bg-[#eefcf5] flex items-center justify-center font-space-mono text-[9px] font-bold text-[#15803d]">8'×8'</div>
+                      <div className="w-8 h-8 border border-emerald-200 rounded bg-[#eefcf5] flex items-center justify-center font-space-mono text-[8.5px] font-bold text-[#15803d]">8'×8'</div>
                       <div>
-                        <div className="text-[12.5px] font-bold text-slate-800">Single Stall</div>
-                        <div className="text-[10px] text-slate-500">Individual booth</div>
+                        <div className="text-[12px] font-bold text-slate-800">Single Stall</div>
+                        <div className="text-[9.5px] text-slate-500">Individual booth</div>
                       </div>
                     </div>
 
@@ -762,15 +931,15 @@ export default function AppV2() {
                     <div
                       draggable
                       onDragStart={(e) => handleToolboxDragStart(e, 'horiz-pair')}
-                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                      className="flex items-center gap-3 p-2.5 bg-emerald-50/30 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
                     >
-                      <div className="w-14 h-9 border border-emerald-200 rounded bg-[#eefcf5] flex items-center justify-center font-space-mono text-[8px] font-bold text-[#15803d] divide-x divide-emerald-200">
-                        <span className="px-1">8'</span>
-                        <span className="px-1">8'</span>
+                      <div className="w-12 h-7 border border-emerald-200 rounded bg-[#eefcf5] flex items-center justify-center font-space-mono text-[7px] font-bold text-[#15803d] divide-x divide-emerald-200">
+                        <span className="px-0.5">8'</span>
+                        <span className="px-0.5">8'</span>
                       </div>
                       <div>
-                        <div className="text-[12.5px] font-bold text-slate-800">Horizontal Pair</div>
-                        <div className="text-[10px] text-slate-500">16'×8' combined</div>
+                        <div className="text-[12px] font-bold text-slate-800">Horizontal Pair</div>
+                        <div className="text-[9.5px] text-slate-500">16'×8' combined</div>
                       </div>
                     </div>
 
@@ -778,15 +947,15 @@ export default function AppV2() {
                     <div
                       draggable
                       onDragStart={(e) => handleToolboxDragStart(e, 'vert-pair')}
-                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                      className="flex items-center gap-3 p-2.5 bg-emerald-50/30 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
                     >
-                      <div className="w-9 h-12 border border-emerald-200 rounded bg-[#eefcf5] flex flex-col items-center justify-center font-space-mono text-[8px] font-bold text-[#15803d] divide-y divide-emerald-200">
+                      <div className="w-7 h-9 border border-emerald-200 rounded bg-[#eefcf5] flex flex-col items-center justify-center font-space-mono text-[7px] font-bold text-[#15803d] divide-y divide-emerald-200">
                         <span className="py-0.5">8'</span>
                         <span className="py-0.5">8'</span>
                       </div>
                       <div>
-                        <div className="text-[12.5px] font-bold text-slate-800">Vertical Pair</div>
-                        <div className="text-[10px] text-slate-500">8'×16' combined</div>
+                        <div className="text-[12px] font-bold text-slate-800">Vertical Pair</div>
+                        <div className="text-[9.5px] text-slate-500">8'×16' combined</div>
                       </div>
                     </div>
 
@@ -794,12 +963,64 @@ export default function AppV2() {
                     <div
                       draggable
                       onDragStart={(e) => handleToolboxDragStart(e, 'triple-l')}
-                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                      className="flex items-center gap-3 p-2.5 bg-emerald-50/30 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
                     >
-                      <div className="w-10 h-10 relative bg-emerald-50 border border-emerald-100 rounded flex items-center justify-center font-space-mono text-[9px] font-bold text-[#15803d]">L-Shape</div>
+                      <div className="w-8 h-8 relative bg-[#eefcf5] border border-emerald-200 rounded flex items-center justify-center font-space-mono text-[8px] font-bold text-[#15803d]">L-Shape</div>
                       <div>
-                        <div className="text-[12.5px] font-bold text-slate-800">Triple Corner</div>
-                        <div className="text-[10px] text-slate-500">3-booth L-shape unit</div>
+                        <div className="text-[12px] font-bold text-slate-800">Triple Corner</div>
+                        <div className="text-[9.5px] text-slate-500">3-booth L-shape</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Labels Category */}
+                  <div className="text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-2 border-t border-slate-100 pt-3">Annotations & Text</div>
+                  <div className="flex flex-col gap-2.5 mb-5">
+                    {/* Draggable Entry */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'annot-entry')}
+                      className="flex items-center gap-3 p-2.5 bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-8 h-6 border border-slate-300 rounded bg-white flex items-center justify-center font-space-mono text-[8px] font-bold text-slate-600">ENTRY</div>
+                      <div>
+                        <div className="text-[12px] font-bold text-slate-800">Entry Label</div>
+                      </div>
+                    </div>
+
+                    {/* Draggable Exit */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'annot-exit')}
+                      className="flex items-center gap-3 p-2.5 bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-8 h-6 border border-slate-300 rounded bg-white flex items-center justify-center font-space-mono text-[8px] font-bold text-slate-600">EXIT</div>
+                      <div>
+                        <div className="text-[12px] font-bold text-slate-800">Exit Label</div>
+                      </div>
+                    </div>
+
+                    {/* Draggable Washroom */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'annot-washroom')}
+                      className="flex items-center gap-3 p-2.5 bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-8 h-8 border border-slate-300 rounded bg-white flex items-center justify-center font-space-mono text-[7px] font-bold text-slate-600">WC</div>
+                      <div>
+                        <div className="text-[12px] font-bold text-slate-800">Washroom (WC)</div>
+                      </div>
+                    </div>
+
+                    {/* Draggable Service Door */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'annot-servicedoor')}
+                      className="flex items-center gap-3 p-2.5 bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-6 h-8 border border-slate-300 rounded bg-white flex flex-col items-center justify-center font-space-mono text-[6.5px] font-bold text-slate-600 writing-mode-vertical">DOOR</div>
+                      <div>
+                        <div className="text-[12px] font-bold text-slate-800">Service Door (Vert)</div>
                       </div>
                     </div>
                   </div>
@@ -807,7 +1028,7 @@ export default function AppV2() {
                   <div className="border-t border-slate-100 pt-4 flex flex-col gap-2">
                     <button
                       onClick={handleClearBoard}
-                      className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
+                      className="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
                     >
                       🗑️ Clear Board (Blank)
                     </button>
@@ -815,15 +1036,15 @@ export default function AppV2() {
                       onClick={() => {
                         setUnits(buildInitialUnits());
                         setSelectedUnitId(null);
-                        addToast('Loaded defaults.');
+                        addToast('Loaded default blueprint (stalls + annotations).');
                       }}
-                      className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
+                      className="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
                     >
                       🔄 Load Blueprint Defaults
                     </button>
                     <button
                       onClick={handleExportLayout}
-                      className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
+                      className="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
                     >
                       💾 Export Layout JSON
                     </button>

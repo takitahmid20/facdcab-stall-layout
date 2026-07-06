@@ -71,7 +71,6 @@ export default function HallGridV2({
             onDragOver={(e) => { if (isEditorMode) e.preventDefault(); }}
             onDrop={(e) => { if (isEditorMode && onDrop) onDrop(e); }}
           >
-            <Annotation />
             {units.map((unit) => (
               <StallV2
                 key={unit.id}
