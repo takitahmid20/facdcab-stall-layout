@@ -1,13 +1,15 @@
 import React from 'react';
-import '../styles/Modal.css';
 
 export default function Toast({ toasts }) {
   if (!toasts || toasts.length === 0) return null;
 
   return (
-    <div id="toastWrap">
+    <div id="toastWrap" className="fixed bottom-6 right-6 z-[600] flex flex-col gap-2 items-end">
       {toasts.map((toast) => (
-        <div key={toast.id} className="toast">
+        <div
+          key={toast.id}
+          className="bg-slate-800 text-white text-[13px] font-semibold font-montserrat px-4 py-3 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.15)] max-w-[320px] animate-[fadeInUp_0.3s_ease]"
+        >
           {toast.text}
         </div>
       ))}

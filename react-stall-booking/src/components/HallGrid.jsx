@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import Stall from './Stall';
 import Annotation from './Annotation';
-import '../styles/HallGrid.css';
 
 export default function HallGrid({ units, onStallClick }) {
   useEffect(() => {
@@ -28,31 +27,36 @@ export default function HallGrid({ units, onStallClick }) {
 
     adjustMapScale();
     window.addEventListener('resize', adjustMapScale);
-    // Timeout backup to ensure full DOM layout is complete
     const timeout = setTimeout(adjustMapScale, 100);
 
     return () => {
       window.removeEventListener('resize', adjustMapScale);
       clearTimeout(timeout);
     };
-  }, [units]); // Recalculate on unit updates in case DOM changes
+  }, [units]);
 
   return (
-    <div className="plan-card">
-      <div className="plan-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <div style={{ fontSize: '18px', fontWeight: '800', color: 'var(--brand-blue)', letterSpacing: '0.05em' }}>
+    <div className="plan-card relative overflow-hidden bg-white border border-slate-200 rounded-2xl p-7 px-10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] grid-lines-bg">
+      <div className="relative flex items-center justify-between w-full mb-6 font-space-mono text-[11px] text-slate-500 tracking-[0.03em] leading-relaxed">
+        <div className="text-[18px] font-extrabold text-brand-blue tracking-[0.05em] font-montserrat">
           BOOK YOUR STALL
         </div>
-        <div className="stall-size" style={{ margin: 0 }}>
+        <div className="text-slate-400 font-space-mono text-[11px] tracking-widest uppercase">
           STALL SIZE: 8'×8'
         </div>
       </div>
 
-      <div className="plan-viewport">
-        <div className="plan-frame">
-          <div className="side-label east"><b>East</b> · 118'</div>
-          <div className="side-label rightdim">118'</div>
-          <div className="hall-grid" id="hallGrid">
+      <div className="plan-viewport w-full overflow-hidden relative flex justify-center">
+        <div className="plan-frame relative inline-block" style={{ transformOrigin: 'top center', transition: 'transform 0.15s ease' }}>
+          <div className="side-label east absolute font-space-mono text-[11px] text-slate-400 tracking-[0.08em] whitespace-nowrap"
+               style={{ left: '-55px', top: '50%', transform: 'translateY(-50%) rotate(-90deg)', transformOrigin: 'center' }}>
+            <b className="text-slate-600 font-bold">East</b> · 118'
+          </div>
+          <div className="side-label rightdim absolute font-space-mono text-[11px] text-slate-400 tracking-[0.08em] whitespace-nowrap"
+               style={{ right: '-50px', top: '50%', transform: 'translateY(-50%) rotate(-90deg)', transformOrigin: 'center' }}>
+            118'
+          </div>
+          <div className="hall-grid relative" id="hallGrid" style={{ width: '870px', height: '1000px' }}>
             <Annotation />
             {units.map((unit) => (
               <Stall key={unit.id} unit={unit} onClick={onStallClick} />

@@ -1,5 +1,4 @@
 import React from 'react';
-import '../styles/Stall.css';
 
 export function fmtBDT(n) {
   const s = String(n);
@@ -12,7 +11,7 @@ export function fmtBDT(n) {
 export default function Stall({ unit, onClick }) {
   const { id, label, nums, price, left, top, width, height, isCorner, status, holdRemaining } = unit;
 
-  // Custom positioning styles
+  // Pixel-precise absolute positioning must remain as inline styles
   const style = {
     position: 'absolute',
     left: `${left}px`,
@@ -28,7 +27,7 @@ export default function Stall({ unit, onClick }) {
     return `Stall ${label} — available, ${fmtBDT(price)}${nums.length > 1 ? ' (combined pair)' : ''}`;
   };
 
-  // Determine split numbers orientation if corner/pair unit
+  // Determine correct display order for number pairs
   let firstNum = nums[0];
   let secondNum = nums[1] || nums[0];
   if (isCorner) {
@@ -48,9 +47,9 @@ export default function Stall({ unit, onClick }) {
 
   const isVertical = height > width;
   const priceHalf = price / 2;
-  const flexDir = isVertical ? 'column' : 'row';
-  const borderVar = status === 'held-mine' ? 'rgba(255,255,255,0.4)' : 'var(--line)';
-  const inlineBorder = isVertical ? { borderBottom: `1px dashed ${borderVar}` } : { borderRight: `1px dashed ${borderVar}` };
+  const splitDivider = status === 'held-mine'
+    ? (isVertical ? { borderBottom: '1px dashed rgba(255,255,255,0.4)' } : { borderRight: '1px dashed rgba(255,255,255,0.4)' })
+    : (isVertical ? { borderBottom: '1px dashed #e2e8f0' } : { borderRight: '1px dashed #e2e8f0' });
 
   const handleStallClick = () => {
     if (status === 'available' || status === 'held-mine') {
@@ -58,32 +57,46 @@ export default function Stall({ unit, onClick }) {
     }
   };
 
+  // Build className based on status
+  const baseClasses = 'absolute flex flex-col items-center justify-center text-center cursor-pointer rounded-[4px] border transition-all duration-150 select-none overflow-hidden z-10';
+  
+  let statusClasses = '';
+  if (status === 'available') {
+    statusClasses = 'bg-green-50 border-green-400/40 text-green-800 hover:bg-green-100 hover:border-green-500 hover:scale-[1.04] hover:z-20 hover:shadow-[0_4px_12px_rgba(16,185,129,0.2)]';
+  } else if (status === 'held-mine') {
+    statusClasses = 'bg-gradient-to-br from-[#155dfc] to-[#4f39f6] border-white/30 text-white shadow-[0_4px_14px_rgba(21,93,252,0.35)] scale-[1.04] z-20';
+  } else if (status === 'held-other') {
+    statusClasses = 'stripe-held-other border-amber-400/40 text-amber-700 cursor-not-allowed';
+  } else if (status === 'booked') {
+    statusClasses = 'stripe-booked border-slate-300 text-slate-400 cursor-not-allowed opacity-80';
+  }
+
   return (
     <div
-      className={`stall ${status} ${nums.length > 1 ? 'corner' : ''}`}
+      className={`${baseClasses} ${statusClasses}`}
       style={style}
       title={getTooltip()}
       onClick={handleStallClick}
     >
       {nums.length > 1 ? (
-        <div className="corner-split" style={{ display: 'flex', flexDirection: flexDir, width: '100%', height: '100%' }}>
-          <div className="corner-half" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', ...inlineBorder }}>
-            <div className="num">{firstNum}</div>
-            <div className="price">{fmtBDT(priceHalf)}</div>
+        <div className="flex w-full h-full" style={{ flexDirection: isVertical ? 'column' : 'row' }}>
+          <div className="flex-1 flex flex-col items-center justify-center" style={splitDivider}>
+            <div className="font-space-mono text-[11px] font-bold leading-none">{firstNum}</div>
+            <div className="font-montserrat text-[8.5px] font-semibold mt-0.5 opacity-70">{fmtBDT(priceHalf)}</div>
           </div>
-          <div className="corner-half" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-            <div className="num">{secondNum}</div>
-            <div className="price">{fmtBDT(priceHalf)}</div>
-            {status === 'held-other' && <div className="mini-timer" style={{ position: 'absolute', bottom: '2px', right: '4px' }}>{holdRemaining}s</div>}
-            {status === 'held-mine' && <div className="mini-timer" id="miniTimerMine" style={{ position: 'absolute', bottom: '2px', right: '4px', color: '#ffffff' }}>{holdRemaining}s</div>}
+          <div className="flex-1 flex flex-col items-center justify-center relative">
+            <div className="font-space-mono text-[11px] font-bold leading-none">{secondNum}</div>
+            <div className="font-montserrat text-[8.5px] font-semibold mt-0.5 opacity-70">{fmtBDT(priceHalf)}</div>
+            {status === 'held-other' && <div className="absolute bottom-0.5 right-1 font-space-mono text-[8px] font-bold text-amber-600">{holdRemaining}s</div>}
+            {status === 'held-mine' && <div id="miniTimerMine" className="absolute bottom-0.5 right-1 font-space-mono text-[8px] font-bold text-white">{holdRemaining}s</div>}
           </div>
         </div>
       ) : (
         <>
-          <div className="num">{label}</div>
-          <div className="price">{fmtBDT(price)}</div>
-          {status === 'held-other' && <div className="mini-timer">{holdRemaining}s</div>}
-          {status === 'held-mine' && <div className="mini-timer" id="miniTimerMine">{holdRemaining}s</div>}
+          <div className="font-space-mono text-[11px] font-bold leading-none">{label}</div>
+          <div className="font-montserrat text-[8.5px] font-semibold mt-0.5 opacity-70">{fmtBDT(price)}</div>
+          {status === 'held-other' && <div className="font-space-mono text-[8px] font-bold text-amber-600 mt-0.5">{holdRemaining}s</div>}
+          {status === 'held-mine' && <div id="miniTimerMine" className="font-space-mono text-[8px] font-bold text-white mt-0.5">{holdRemaining}s</div>}
         </>
       )}
     </div>

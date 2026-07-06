@@ -291,10 +291,10 @@ export default function App() {
       <Navbar />
       <Header stats={stats} />
 
-      <div className="layout">
+      <div className="max-w-[1600px] mx-auto grid gap-7 px-6 py-6 items-start" style={{ gridTemplateColumns: '1fr 310px' }}>
         <HallGrid units={units} onStallClick={handleStallClick} />
 
-        <div className="side-panel">
+        <div className="flex flex-col gap-5">
           <Legend />
           <DescriptionCard
             selectedUnit={selectedUnit}
@@ -306,26 +306,26 @@ export default function App() {
 
       {/* Floating Hold Panel */}
       {heldStalls.length > 0 && !checkoutOpen && (
-        <div className="hold-panel">
-          <div className="hold-head">
-            <span className="lbl">{heldStalls.length} {heldStalls.length === 1 ? 'Stall' : 'Stalls'} Held</span>
-            <button className="hold-close" onClick={handleCancelHold}>✕</button>
+        <div className="fixed bottom-5 right-5 z-[400] w-[320px] bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-5 font-montserrat">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-[13.5px] font-bold text-slate-800">{heldStalls.length} {heldStalls.length === 1 ? 'Stall' : 'Stalls'} Held</span>
+            <button className="w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all cursor-pointer border-0 bg-transparent text-sm" onClick={handleCancelHold}>✕</button>
           </div>
-          <div className="hold-stall" style={{ fontSize: '14px', whiteSpace: 'normal', maxHeight: '60px', overflowY: 'auto' }}>
+          <div className="text-[13px] text-slate-600 font-medium mb-2 max-h-[60px] overflow-y-auto">
             Stalls: {combinedLabels}
           </div>
-          <div className="hold-price">
+          <div className="text-[15px] font-extrabold text-[#155dfc] mb-3">
             Total Price: {fmtBDTLocal(totalHeldPrice)}
           </div>
-          <div className="hold-timer-row">
-            <div className="hold-timer">Expires: {minHoldRemaining}s</div>
-            <div className="hold-timer-bar">
-              <i style={{ width: `${(minHoldRemaining / 60) * 100}%` }}></i>
+          <div className="mb-3">
+            <div className="text-[11px] font-semibold text-slate-500 mb-1.5">Expires: {minHoldRemaining}s</div>
+            <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-[#155dfc] to-[#4f39f6] rounded-full transition-all duration-1000" style={{ width: `${(minHoldRemaining / 60) * 100}%` }}></div>
             </div>
           </div>
-          <div className="hold-actions">
-            <button className="btn btn-ghost" onClick={handleCancelHold}>Release All</button>
-            <button className="btn btn-gold" onClick={() => setCheckoutOpen(true)}>Book Now</button>
+          <div className="flex gap-2">
+            <button className="flex-1 py-2.5 rounded-lg text-[12px] font-bold border border-slate-300 text-slate-600 bg-white hover:bg-slate-50 transition-all cursor-pointer" onClick={handleCancelHold}>Release All</button>
+            <button className="flex-[2] py-2.5 rounded-lg text-[12px] font-bold text-white bg-gradient-to-r from-[#155dfc] to-[#4f39f6] shadow-[0_4px_10px_rgba(21,93,252,0.2)] hover:shadow-[0_6px_14px_rgba(21,93,252,0.35)] transition-all cursor-pointer border-0" onClick={() => setCheckoutOpen(true)}>Book Now</button>
           </div>
         </div>
       )}
@@ -362,7 +362,10 @@ export default function App() {
       <Toast toasts={toasts} />
 
       {/* Reset button */}
-      <button className="reset-btn" onClick={handleReset}>
+      <button
+        className="fixed left-5 bottom-5 z-40 bg-white border border-slate-200 rounded-lg text-slate-500 text-[11px] px-3.5 py-2 cursor-pointer font-space-mono shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:text-[#155dfc] hover:border-[#155dfc] hover:shadow-[0_4px_12px_rgba(21,93,252,0.08)] transition-all duration-200"
+        onClick={handleReset}
+      >
         ↺ Reset prototype
       </button>
     </>
