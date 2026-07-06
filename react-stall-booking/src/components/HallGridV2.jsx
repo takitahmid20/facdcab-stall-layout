@@ -71,6 +71,24 @@ export default function HallGridV2({
             onDragOver={(e) => { if (isEditorMode) e.preventDefault(); }}
             onDrop={(e) => { if (isEditorMode && onDrop) onDrop(e); }}
           >
+            {isEditorMode && (
+              <div style={{
+                position: 'absolute',
+                left: '-2px',
+                top: '76px',
+                width: '801px',
+                height: '876px',
+                border: '2px dashed #22c55e',
+                background: 'rgba(34, 197, 94, 0.02)',
+                pointerEvents: 'none',
+                zIndex: 1,
+                borderRadius: '6px',
+              }}>
+                <div className="absolute top-2 right-2 font-space-mono text-[8px] font-extrabold text-[#15803d] bg-[#eefcf5] px-2 py-0.5 rounded border border-[#22c55e]/20 uppercase tracking-wider">
+                  Safe Placement Zone
+                </div>
+              </div>
+            )}
             {units.map((unit) => (
               <StallV2
                 key={unit.id}
