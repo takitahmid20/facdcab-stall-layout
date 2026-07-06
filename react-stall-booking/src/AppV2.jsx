@@ -370,6 +370,50 @@ export default function AppV2() {
     URL.revokeObjectURL(url);
   };
 
+  const handleImportLayout = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid format: Layout data must be a JSON array.');
+        }
+
+        const sanitized = data.map((item, index) => {
+          if (!item.id) {
+            throw new Error(`Item at index ${index} is missing a unique 'id'`);
+          }
+          return {
+            id: item.id,
+            nums: Array.isArray(item.nums) ? item.nums : [index + 1],
+            label: item.label || String(item.nums?.[0] || index + 1),
+            price: typeof item.price === 'number' ? item.price : (item.nums?.length || 1) * 80000,
+            left: typeof item.left === 'number' ? item.left : 100,
+            top: typeof item.top === 'number' ? item.top : 100,
+            width: typeof item.width === 'number' ? item.width : 58,
+            height: typeof item.height === 'number' ? item.height : 58,
+            isCorner: !!item.isCorner,
+            status: item.status || 'available',
+            holdRemaining: typeof item.holdRemaining === 'number' ? item.holdRemaining : 0,
+            type: item.type || 'stall',
+            isVertical: !!item.isVertical
+          };
+        });
+
+        setUnits(sanitized);
+        setSelectedUnitId(null);
+        addToast(`Successfully imported ${sanitized.length} layout units!`);
+      } catch (err) {
+        alert(`Error importing layout: ${err.message}`);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   // Dragging event listeners
   useEffect(() => {
     if (!activeDragId || !dragInfo) return;
@@ -1048,6 +1092,19 @@ export default function AppV2() {
                     >
                       💾 Export Layout JSON
                     </button>
+                    <button
+                      onClick={() => document.getElementById('layout-upload-input').click()}
+                      className="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
+                    >
+                      📂 Upload Layout JSON
+                    </button>
+                    <input
+                      type="file"
+                      id="layout-upload-input"
+                      accept=".json"
+                      onChange={handleImportLayout}
+                      style={{ display: 'none' }}
+                    />
                   </div>
                 </div>
               )}
