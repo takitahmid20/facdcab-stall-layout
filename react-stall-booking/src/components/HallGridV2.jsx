@@ -8,7 +8,8 @@ export default function HallGridV2({
   isEditorMode = false,
   activeDragId = null,
   mergeCandidateId = null,
-  onStallDragStart = () => {}
+  onStallDragStart = () => {},
+  onDrop = null
 }) {
   useEffect(() => {
     function adjustMapScale() {
@@ -63,7 +64,13 @@ export default function HallGridV2({
                style={{ right: '-50px', top: '50%', transform: 'translateY(-50%) rotate(-90deg)', transformOrigin: 'center' }}>
             118'
           </div>
-          <div className="hall-grid relative" id="hallGrid" style={{ width: '797px', height: '1060px', margin: '20px auto' }}>
+          <div
+            className="hall-grid relative"
+            id="hallGrid"
+            style={{ width: '797px', height: '1060px', margin: '20px auto' }}
+            onDragOver={(e) => { if (isEditorMode) e.preventDefault(); }}
+            onDrop={(e) => { if (isEditorMode && onDrop) onDrop(e); }}
+          >
             <Annotation />
             {units.map((unit) => (
               <StallV2

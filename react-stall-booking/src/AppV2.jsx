@@ -157,7 +157,7 @@ function buildInitialUnits() {
 }
 
 export default function AppV2() {
-  const [units, setUnits] = useState(buildInitialUnits);
+  const [units, setUnits] = useState([]);
   const [heldUnitIds, setHeldUnitIds] = useState([]);
   const [selectedUnitId, setSelectedUnitId] = useState(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -185,6 +185,96 @@ export default function AppV2() {
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
+  };
+
+  const handleToolboxDragStart = (e, stallType) => {
+    e.dataTransfer.setData('text/plain', stallType);
+  };
+
+  const handleGridDrop = (e) => {
+    e.preventDefault();
+    const stallType = e.dataTransfer.getData('text/plain');
+    if (!stallType) return;
+
+    const gridEl = document.getElementById('hallGrid');
+    if (!gridEl) return;
+    const rect = gridEl.getBoundingClientRect();
+    const scale = rect.width / 797;
+
+    let dropX = (e.clientX - rect.left) / scale;
+    let dropY = (e.clientY - rect.top) / scale;
+
+    dropX = Math.round(dropX / 5) * 5;
+    dropY = Math.round(dropY / 5) * 5;
+
+    let width = 58;
+    let height = 58;
+    let nums = [];
+    let isCorner = false;
+
+    const allStallNums = units.flatMap(u => u.nums);
+    const maxStallNum = allStallNums.length > 0 ? Math.max(...allStallNums) : 0;
+
+    if (stallType === 'single') {
+      nums = [maxStallNum + 1];
+    } else if (stallType === 'horiz-pair') {
+      nums = [maxStallNum + 1, maxStallNum + 2];
+      width = 121;
+    } else if (stallType === 'vert-pair') {
+      nums = [maxStallNum + 1, maxStallNum + 2];
+      height = 121;
+      isCorner = true;
+    } else if (stallType === 'triple-l') {
+      nums = [maxStallNum + 1, maxStallNum + 2, maxStallNum + 3];
+      width = 116;
+      height = 116;
+      isCorner = true;
+    }
+
+    const label = nums.join(' · ');
+    const id = 'u' + nums.join('-');
+
+    const newUnit = {
+      id,
+      nums,
+      label,
+      price: nums.length * 80000,
+      left: Math.max(0, Math.min(797 - width, dropX)),
+      top: Math.max(0, Math.min(1060 - height, dropY)),
+      width,
+      height,
+      isCorner,
+      status: 'available',
+      holdRemaining: 0
+    };
+
+    setUnits(prev => [...prev, newUnit]);
+    setSelectedUnitId(id);
+    addToast(`Added new Stall Unit (${label}) to layout.`);
+  };
+
+  const handleClearBoard = () => {
+    if (window.confirm('Delete all stalls and start with a blank layout?')) {
+      setUnits([]);
+      setSelectedUnitId(null);
+      addToast('Cleared layout board.');
+    }
+  };
+
+  const handleExportLayout = () => {
+    const layoutStr = JSON.stringify(units, null, 2);
+    navigator.clipboard.writeText(layoutStr);
+    addToast('Layout JSON copied to clipboard!');
+    
+    const blob = new Blob([layoutStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `stall-layout-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   // Dragging event listeners
@@ -576,7 +666,6 @@ export default function AppV2() {
 
       <div className="max-w-[1600px] mx-auto grid gap-7 px-6 py-2 items-start" style={{ gridTemplateColumns: '1fr 310px' }}>
         
-        {/* Pass down editor mouse triggers */}
         <HallGridV2
           units={units}
           onStallClick={handleStallClick}
@@ -584,18 +673,176 @@ export default function AppV2() {
           activeDragId={activeDragId}
           mergeCandidateId={mergeCandidateId}
           onStallDragStart={handleStallDragStart}
+          onDrop={handleGridDrop}
         />
 
         <div className="flex flex-col gap-5">
-          <Legend />
-          
-          <DescriptionCard
-            selectedUnit={selectedUnit}
-            onBookClick={() => setCheckoutOpen(true)}
-            onReleaseClick={handleCancelHold}
-            isEditorMode={isEditorMode}
-            onSplitClick={() => handleSplitStall(selectedUnitId)}
-          />
+          {isEditorMode ? (
+            <>
+              {selectedUnit ? (
+                /* Stall Editor Card */
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] font-montserrat">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider font-semibold">Stall Editor</span>
+                    <button
+                      className="text-slate-400 hover:text-slate-600 text-xs font-bold border-0 bg-transparent cursor-pointer"
+                      onClick={() => setSelectedUnitId(null)}
+                    >
+                      Deselect
+                    </button>
+                  </div>
+                  <div className="text-[18px] font-extrabold text-slate-800 mb-1">{selectedUnit.label}</div>
+                  <div className="text-[12px] text-slate-500 mb-4">{selectedUnit.nums.length > 1 ? `${selectedUnit.nums.length}-Stall Combined Block` : 'Single Stall Block'}</div>
+                  
+                  <div className="mb-4">
+                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1.5">Stall Number(s)</label>
+                    <input
+                      type="text"
+                      value={selectedUnit.nums.join(', ')}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const parsedNums = val.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+                        if (parsedNums.length > 0) {
+                          setUnits(prev => prev.map(u => u.id === selectedUnit.id ? {
+                            ...u,
+                            nums: parsedNums,
+                            label: parsedNums.join(' · '),
+                            id: 'u' + parsedNums.slice().sort((a,b)=>a-b).join('-')
+                          } : u));
+                          setSelectedUnitId('u' + parsedNums.slice().sort((a,b)=>a-b).join('-'));
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-[13px] font-medium focus:outline-none focus:border-[#155dfc]"
+                      placeholder="e.g. 23, 24"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    {selectedUnit.nums.length > 1 && (
+                      <button
+                        onClick={() => handleSplitStall(selectedUnit.id)}
+                        className="w-full py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[12px] rounded-lg border border-indigo-200 transition-all cursor-pointer"
+                      >
+                        Split Combined Unit
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        setUnits(prev => prev.filter(u => u.id !== selectedUnit.id));
+                        setSelectedUnitId(null);
+                        addToast(`Deleted Stall ${selectedUnit.label} from layout.`);
+                      }}
+                      className="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[12px] rounded-lg border border-rose-200 transition-all cursor-pointer"
+                    >
+                      Delete Stall Block
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* Stall Toolbox Card */
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] font-montserrat">
+                  <div className="text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-3">Stall Toolbox</div>
+                  <div className="text-[12px] text-slate-500 mb-4 font-semibold">Drag and drop these blocks onto the grid map:</div>
+                  
+                  <div className="flex flex-col gap-3 mb-6">
+                    {/* Draggable Single */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'single')}
+                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-10 h-10 border border-emerald-200 rounded bg-[#eefcf5] flex items-center justify-center font-space-mono text-[9px] font-bold text-[#15803d]">8'×8'</div>
+                      <div>
+                        <div className="text-[12.5px] font-bold text-slate-800">Single Stall</div>
+                        <div className="text-[10px] text-slate-500">Individual booth</div>
+                      </div>
+                    </div>
+
+                    {/* Draggable Horizontal Pair */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'horiz-pair')}
+                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-14 h-9 border border-emerald-200 rounded bg-[#eefcf5] flex items-center justify-center font-space-mono text-[8px] font-bold text-[#15803d] divide-x divide-emerald-200">
+                        <span className="px-1">8'</span>
+                        <span className="px-1">8'</span>
+                      </div>
+                      <div>
+                        <div className="text-[12.5px] font-bold text-slate-800">Horizontal Pair</div>
+                        <div className="text-[10px] text-slate-500">16'×8' combined</div>
+                      </div>
+                    </div>
+
+                    {/* Draggable Vertical Pair */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'vert-pair')}
+                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-9 h-12 border border-emerald-200 rounded bg-[#eefcf5] flex flex-col items-center justify-center font-space-mono text-[8px] font-bold text-[#15803d] divide-y divide-emerald-200">
+                        <span className="py-0.5">8'</span>
+                        <span className="py-0.5">8'</span>
+                      </div>
+                      <div>
+                        <div className="text-[12.5px] font-bold text-slate-800">Vertical Pair</div>
+                        <div className="text-[10px] text-slate-500">8'×16' combined</div>
+                      </div>
+                    </div>
+
+                    {/* Draggable Triple Corner */}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleToolboxDragStart(e, 'triple-l')}
+                      className="flex items-center gap-3 p-3 bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100 rounded-xl cursor-grab transition-all hover:shadow-sm"
+                    >
+                      <div className="w-10 h-10 relative bg-emerald-50 border border-emerald-100 rounded flex items-center justify-center font-space-mono text-[9px] font-bold text-[#15803d]">L-Shape</div>
+                      <div>
+                        <div className="text-[12.5px] font-bold text-slate-800">Triple Corner</div>
+                        <div className="text-[10px] text-slate-500">3-booth L-shape unit</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-slate-100 pt-4 flex flex-col gap-2">
+                    <button
+                      onClick={handleClearBoard}
+                      className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
+                    >
+                      🗑️ Clear Board (Blank)
+                    </button>
+                    <button
+                      onClick={() => {
+                        setUnits(buildInitialUnits());
+                        setSelectedUnitId(null);
+                        addToast('Loaded defaults.');
+                      }}
+                      className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
+                    >
+                      🔄 Load Blueprint Defaults
+                    </button>
+                    <button
+                      onClick={handleExportLayout}
+                      className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] rounded-lg border border-slate-200 transition-all cursor-pointer uppercase tracking-wider font-semibold"
+                    >
+                      💾 Export Layout JSON
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <Legend />
+              <DescriptionCard
+                selectedUnit={selectedUnit}
+                onBookClick={() => setCheckoutOpen(true)}
+                onReleaseClick={handleCancelHold}
+                isEditorMode={isEditorMode}
+                onSplitClick={() => handleSplitStall(selectedUnitId)}
+              />
+            </>
+          )}
         </div>
       </div>
 

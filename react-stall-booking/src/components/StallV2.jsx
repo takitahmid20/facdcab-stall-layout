@@ -88,6 +88,66 @@ export default function StallV2({
     }
   }
 
+  if (nums.length === 3) {
+    let type = 'right-corner'; 
+    if (nums.includes(55)) {
+      type = 'top-left-corner'; 
+    } else if (nums.includes(42)) {
+      type = 'bottom-left-corner'; 
+    }
+
+    let s1 = { left: 0, top: 0, num: nums[0], style: {} };
+    let s2 = { left: 0, top: 0, num: nums[1], style: {} };
+    let s3 = { left: 0, top: 0, num: nums[2], style: {} };
+
+    if (type === 'right-corner') {
+      s1 = { left: 0, top: 0, num: nums[2], style: { borderRight: 'none', borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }, isSeamRight: true }; 
+      s2 = { left: 58, top: 0, num: nums[1], style: { borderLeft: 'none', borderBottom: 'none', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px', borderBottomRightRadius: '0px' } }; 
+      s3 = { left: 58, top: 58, num: nums[0], style: { borderTop: 'none', borderTopLeftRadius: '0px', borderTopRightRadius: '0px' }, isSeamTop: true }; 
+    } else if (type === 'top-left-corner') {
+      s1 = { left: 0, top: 0, num: nums[1], style: { borderBottom: 'none', borderRight: 'none', borderTopRightRadius: '0px', borderBottomLeftRadius: '0px', borderBottomRightRadius: '0px' } }; 
+      s2 = { left: 0, top: 58, num: nums[0], style: { borderTop: 'none', borderTopLeftRadius: '0px', borderTopRightRadius: '0px' }, isSeamTop: true }; 
+      s3 = { left: 58, top: 0, num: nums[2], style: { borderLeft: 'none', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }, isSeamLeft: true }; 
+    } else if (type === 'bottom-left-corner') {
+      s1 = { left: 0, top: 0, num: nums[2], style: { borderBottom: 'none', borderBottomLeftRadius: '0px', borderBottomRightRadius: '0px' } }; 
+      s2 = { left: 0, top: 58, num: nums[1], style: { borderTop: 'none', borderRight: 'none', borderTopLeftRadius: '0px', borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }, isSeamTop: true }; 
+      s3 = { left: 58, top: 58, num: nums[0], style: { borderLeft: 'none', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }, isSeamLeft: true }; 
+    }
+
+    return (
+      <div
+        className="absolute select-none pointer-events-none z-10"
+        style={style}
+        title={getTooltip()}
+        onMouseDown={(e) => onDragStart(e)}
+      >
+        {[s1, s2, s3].map((s, idx) => (
+          <div
+            key={idx}
+            className={`${baseClasses.replace('absolute', '')} ${statusClasses} pointer-events-auto`}
+            style={{
+              position: 'absolute',
+              left: `${s.left}px`,
+              top: `${s.top}px`,
+              width: '58px',
+              height: '58px',
+              ...s.style
+            }}
+            onClick={handleStallClick}
+          >
+            <div className="w-full h-full relative flex flex-col items-center justify-center">
+              {s.isSeamTop && <div className="absolute top-0 left-0 right-0 border-t border-dashed border-current/30"></div>}
+              {s.isSeamLeft && <div className="absolute top-0 bottom-0 left-0 border-l border-dashed border-current/30"></div>}
+              {s.isSeamRight && <div className="absolute top-0 bottom-0 right-0 border-r border-dashed border-current/30"></div>}
+              <div className="font-space-mono text-[11px] font-bold leading-none">{s.num}</div>
+              <div className="font-montserrat text-[8.5px] font-semibold mt-0.5 opacity-70">{fmtBDT(80000)}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${baseClasses} ${statusClasses}`}
