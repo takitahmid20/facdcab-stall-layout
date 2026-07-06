@@ -7,7 +7,6 @@ import DescriptionCard from './components/DescriptionCard';
 import CheckoutModal from './components/CheckoutModal';
 import ConfirmationModal from './components/ConfirmationModal';
 import Toast from './components/Toast';
-import SSLCommerzGateway from './components/SSLCommerzGateway';
 import './styles/index.css';
 import './styles/Modal.css';
 
@@ -18,6 +17,7 @@ const HELD_OTHER_SEED = [68, 30];
 // Helper to construct all unit objects matching coordinates engine
 function buildInitialUnits() {
   const units = [];
+  const localBooked = JSON.parse(localStorage.getItem('booked_stalls_store') || '[]');
 
   function addUnit(nums, left, top, width, height, isCorner) {
     const price = nums.length > 1 ? 160000 : 80000;
@@ -28,7 +28,7 @@ function buildInitialUnits() {
     let holdRemaining = 0;
 
     // Seed state initialization
-    if (nums.some(n => BOOKED_SEED.includes(n)) || id === 'u41-42') {
+    if (nums.some(n => BOOKED_SEED.includes(n)) || localBooked.includes(id) || id === 'u41-42') {
       status = 'booked';
     } else if (nums.some(n => HELD_OTHER_SEED.includes(n))) {
       status = 'held-other';
@@ -122,9 +122,48 @@ export default function App() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmData, setConfirmData] = useState(null);
-  const [gatewayOpen, setGatewayOpen] = useState(false);
-  const [gatewayData, setGatewayData] = useState(null);
   const [toasts, setToasts] = useState([]);
+
+  // Handle payment response redirection parameters on page load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const payStatus = urlParams.get('payment_status');
+    const tranId = urlParams.get('tran_id');
+
+    if (payStatus) {
+      const savedOrderStr = localStorage.getItem('pending_stall_order');
+      if (savedOrderStr) {
+        const order = JSON.parse(savedOrderStr);
+        if (payStatus === 'success') {
+          // Permanently book units locally
+          const localBooked = JSON.parse(localStorage.getItem('booked_stalls_store') || '[]');
+          const updatedBooked = [...new Set([...localBooked, ...order.stallIds])];
+          localStorage.setItem('booked_stalls_store', JSON.stringify(updatedBooked));
+
+          // Set units state immediately
+          setUnits((prev) =>
+            prev.map((u) => (order.stallIds.includes(u.id) ? { ...u, status: 'booked', holdRemaining: 0 } : u))
+          );
+          
+          setConfirmData({
+            stallLabel: order.stallLabel,
+            email: order.email,
+            amount: order.amount,
+            name: order.name,
+          });
+          setConfirmOpen(true);
+          addToast(`Stalls ${order.stallLabel} booked successfully!`);
+        } else if (payStatus === 'fail') {
+          addToast(`Payment failed for Stalls ${order.stallLabel}. Please try again.`);
+        } else if (payStatus === 'cancel') {
+          addToast(`Payment cancelled for Stalls ${order.stallLabel}.`);
+        }
+        localStorage.removeItem('pending_stall_order');
+      }
+      // Clean query params from URL without refreshing page
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   // Stats calculation
   const stats = {
@@ -231,63 +270,80 @@ export default function App() {
     addToast('Released hold on all selected stalls.');
   };
 
-  const handleCheckoutSubmit = (formData) => {
+  const handleCheckoutSubmit = async (formData) => {
     if (heldUnitIds.length === 0) return;
     const heldStallsList = units.filter((u) => heldUnitIds.includes(u.id));
     const totalAmount = heldStallsList.reduce((sum, u) => sum + u.price, 0);
     const combinedLabels = heldStallsList.map((u) => u.label).join(', ');
+    const orderId = `EXPO-MULTI-${Date.now()}`;
 
-    setGatewayData({
+    // Store in localStorage to recover after redirect
+    const pendingOrder = {
       stallIds: [...heldUnitIds],
       stallLabel: combinedLabels,
       email: formData.email,
       amount: totalAmount,
       name: formData.name,
-      orderId: `EXPO-MULTI-${Date.now()}`,
-      storeId: import.meta.env.VITE_SSLCOMMERZ_STORE_ID || 'asdas6971c45b4de59',
-    });
+      phone: formData.phone,
+      orderId,
+    };
+    localStorage.setItem('pending_stall_order', JSON.stringify(pendingOrder));
 
-    setCheckoutOpen(false);
-    setGatewayOpen(true);
     addToast('Redirecting to SSLCommerz Secure Payment Gateway...');
-  };
 
-  const handlePaymentSuccess = () => {
-    if (!gatewayData) return;
+    try {
+      const params = new URLSearchParams();
+      params.append('store_id', import.meta.env.VITE_SSLCOMMERZ_STORE_ID || 'asdas6971c45b4de59');
+      params.append('store_passwd', import.meta.env.VITE_SSLCOMMERZ_STORE_PASSWORD || 'asdas6971c45b4de59@ssl');
+      params.append('total_amount', String(totalAmount));
+      params.append('currency', 'BDT');
+      params.append('tran_id', orderId);
+      params.append('success_url', `${window.location.origin}/payment-success`);
+      params.append('fail_url', `${window.location.origin}/payment-fail`);
+      params.append('cancel_url', `${window.location.origin}/payment-cancel`);
+      
+      params.append('cus_name', formData.name);
+      params.append('cus_email', formData.email);
+      params.append('cus_phone', formData.phone);
+      params.append('cus_add1', 'Dhaka');
+      params.append('cus_city', 'Dhaka');
+      params.append('cus_country', 'Bangladesh');
+      params.append('shipping_method', 'NO');
+      params.append('product_name', combinedLabels);
+      params.append('product_category', 'Stall');
+      params.append('product_profile', 'general');
 
-    // Book units permanently
-    setUnits((prev) =>
-      prev.map((u) => (gatewayData.stallIds.includes(u.id) ? { ...u, status: 'booked', holdRemaining: 0 } : u))
-    );
+      const response = await fetch('/initiate-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+      });
 
-    setConfirmData({
-      stallLabel: gatewayData.stallLabel,
-      email: gatewayData.email,
-      amount: gatewayData.amount,
-      name: gatewayData.name,
-    });
-
-    setHeldUnitIds([]);
-    setSelectedUnitId(null);
-    setGatewayOpen(false);
-    setConfirmOpen(true);
-    addToast(`Stalls ${gatewayData.stallLabel} booked successfully!`);
-  };
-
-  const handlePaymentFailure = () => {
-    setGatewayOpen(false);
-    addToast('Payment cancelled or failed. Stall holds remain active.');
+      const data = await response.json();
+      if (data.status === 'SUCCESS' && data.GatewayPageURL) {
+        window.location.href = data.GatewayPageURL;
+      } else {
+        addToast(`Gateway initiation failed: ${data.failedreason || 'Unknown error'}`);
+        localStorage.removeItem('pending_stall_order');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Error contacting SSLCommerz gateway. Please try again.');
+      localStorage.removeItem('pending_stall_order');
+    }
   };
 
   const handleReset = () => {
     if (window.confirm('Reset the map back to default demo state?')) {
+      localStorage.removeItem('booked_stalls_store');
+      localStorage.removeItem('pending_stall_order');
       setUnits(buildInitialUnits());
       setHeldUnitIds([]);
       setSelectedUnitId(null);
       setCheckoutOpen(false);
       setConfirmOpen(false);
-      setGatewayOpen(false);
-      setGatewayData(null);
       addToast('Prototype reset successfully.');
     }
   };
@@ -369,16 +425,7 @@ export default function App() {
         />
       )}
 
-      {/* SSLCommerz Payment Gateway Portal */}
-      {gatewayOpen && gatewayData && (
-        <SSLCommerzGateway
-          amount={gatewayData.amount}
-          orderId={gatewayData.orderId}
-          storeId={gatewayData.storeId}
-          onSuccess={handlePaymentSuccess}
-          onFailure={handlePaymentFailure}
-        />
-      )}
+
 
       {/* Toast wrap container */}
       <Toast toasts={toasts} />
