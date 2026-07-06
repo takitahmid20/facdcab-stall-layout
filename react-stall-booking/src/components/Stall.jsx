@@ -25,7 +25,7 @@ export default function Stall({ unit, onClick }) {
     if (status === 'booked') return `Stall ${label} — already booked`;
     if (status === 'held-other') return `Stall ${label} — on hold by another visitor (${holdRemaining}s left)`;
     if (status === 'held-mine') return `Stall ${label} — held by you (${holdRemaining}s left)`;
-    return `Stall ${label} — available, ${fmtBDT(price)}${isCorner ? ' (merged corner pair)' : ''}`;
+    return `Stall ${label} — available, ${fmtBDT(price)}${nums.length > 1 ? ' (combined pair)' : ''}`;
   };
 
   // Determine split numbers orientation if corner/pair unit
@@ -60,12 +60,12 @@ export default function Stall({ unit, onClick }) {
 
   return (
     <div
-      className={`stall ${status} ${isCorner ? 'corner' : ''}`}
+      className={`stall ${status} ${nums.length > 1 ? 'corner' : ''}`}
       style={style}
       title={getTooltip()}
       onClick={handleStallClick}
     >
-      {isCorner ? (
+      {nums.length > 1 ? (
         <div className="corner-split" style={{ display: 'flex', flexDirection: flexDir, width: '100%', height: '100%' }}>
           <div className="corner-half" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', ...inlineBorder }}>
             <div className="num">{firstNum}</div>

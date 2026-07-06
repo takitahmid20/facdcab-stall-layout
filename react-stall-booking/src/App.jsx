@@ -12,7 +12,7 @@ import './styles/index.css';
 import './styles/Modal.css';
 
 // Seed booking config
-const BOOKED_SEED = [6, 7, 8, 20, 44, 63, 77, 89];
+const BOOKED_SEED = [6, 7, 8, 20, 44, 61, 62, 63, 64, 69, 70, 71, 72, 77, 78, 79, 80, 85, 86, 87, 88];
 const HELD_OTHER_SEED = [68, 30];
 
 // Helper to construct all unit objects matching coordinates engine
@@ -20,7 +20,7 @@ function buildInitialUnits() {
   const units = [];
 
   function addUnit(nums, left, top, width, height, isCorner) {
-    const price = isCorner ? 160000 : 80000;
+    const price = nums.length > 1 ? 160000 : 80000;
     const label = nums.length > 1 ? nums.slice().sort((a, b) => a - b).join(' · ') : String(nums[0]);
     const id = 'u' + nums.slice().sort((a, b) => a - b).join('-');
 
@@ -67,7 +67,7 @@ function buildInitialUnits() {
   addUnit([56], 312, 78, 58, 58, false);
   addUnit([57, 58], 375, 78, 121, 58, true);
 
-  // middle clusters
+  // middle clusters (combined horizontal pairs: 59-60, 61-62, etc. each taking 121px width)
   const clusterRows = [
     { top: 204, bottom: 267, nums: [59, 60, 61, 62, 63, 64, 65, 66] },
     { top: 350, bottom: 413, nums: [67, 68, 69, 70, 71, 72, 73, 74] },
@@ -75,14 +75,10 @@ function buildInitialUnits() {
     { top: 642, bottom: 705, nums: [83, 84, 85, 86, 87, 88, 89, 90] }
   ];
   clusterRows.forEach(c => {
-    addUnit([c.nums[0]], 123, c.top, 58, 58, false);
-    addUnit([c.nums[1]], 186, c.top, 58, 58, false);
-    addUnit([c.nums[2]], 249, c.top, 58, 58, false);
-    addUnit([c.nums[3]], 312, c.top, 58, 58, false);
-    addUnit([c.nums[4]], 123, c.bottom, 58, 58, false);
-    addUnit([c.nums[5]], 186, c.bottom, 58, 58, false);
-    addUnit([c.nums[6]], 249, c.bottom, 58, 58, false);
-    addUnit([c.nums[7]], 312, c.bottom, 58, 58, false);
+    addUnit([c.nums[0], c.nums[1]], 123, c.top, 121, 58, false);
+    addUnit([c.nums[2], c.nums[3]], 249, c.top, 121, 58, false);
+    addUnit([c.nums[4], c.nums[5]], 123, c.bottom, 121, 58, false);
+    addUnit([c.nums[6], c.nums[7]], 249, c.bottom, 121, 58, false);
   });
 
   // bottom horizontal row: y = 892px (diagonal point contact with 41, starts at x = 58px)
