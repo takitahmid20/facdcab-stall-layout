@@ -1,0 +1,170 @@
+header {
+  max-width: 1600px;
+  margin: 20px auto 24px;
+  padding: 0 24px;
+}
+
+.header-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  width: 100%;
+  padding: 8px 0 20px 0;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  margin: 0;
+  letter-spacing: -0.02em;
+  color: #1e293b;
+  line-height: 1.25;
+}
+
+.meta-badge-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.meta-badge {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 12px;
+  padding: 0 20px;
+  height: 76px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 280px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+}
+
+.meta-badge svg {
+  color: var(--brand-blue);
+  flex-shrink: 0;
+}
+
+.meta-badge-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-badge-content .badge-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand-blue);
+  line-height: 1.2;
+}
+
+.meta-badge-content .badge-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11.5px;
+  color: #475569;
+  margin-top: 2px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.header-description {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  color: #1e293b;
+  font-weight: 600;
+  margin-top: 6px;
+  max-width: 780px;
+  line-height: 1.5;
+}
+
+.stats-grid {
+  display: flex;
+  gap: 14px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 14px;
+  padding: 0 20px;
+  height: 76px;
+  box-sizing: border-box;
+  min-width: 105px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+  position: relative;
+  cursor: default;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card b {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-card span {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #475569;
+  margin-top: 6px;
+}
+
+.stat-card.available {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.04);
+}
+
+.stat-card.available b {
+  color: #16a34a;
+}
+
+.stat-card.onhold {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.04);
+}
+
+.stat-card.onhold b {
+  color: #d97706;
+}
+
+.stat-card.booked {
+  border-color: rgba(100, 116, 139, 0.35);
+  background: rgba(100, 116, 139, 0.04);
+}
+
+.stat-card.booked b {
+  color: #64748b;
+}

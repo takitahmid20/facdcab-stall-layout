@@ -1,0 +1,110 @@
+.hall-grid {
+  position: relative;
+  width: 797px;
+  height: 1020px;
+  margin: 20px auto;
+}
+
+.hall-outline {
+  position: absolute;
+  left: -2px;
+  top: 76px;
+  width: 801px;
+  height: 876px;
+  border: 2px solid var(--line);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.annot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  color: var(--text-faint);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+}
+
+.annot.washroom {
+  left: 558px;
+  top: 15px;
+  width: 239px;
+  height: 58px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text-dim);
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.annot.exittop {
+  left: 558px;
+  top: 141px;
+  width: 35px;
+  height: 58px;
+  writing-mode: vertical-rl;
+  font-size: 9.5px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.annot.servicedoor {
+  left: 11.5px;
+  top: 204px;
+  width: 35px;
+  height: 58px;
+  writing-mode: vertical-rl;
+  font-size: 8.5px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.annot.southlbl {
+  left: 123px;
+  top: 45px;
+  width: 400px;
+  height: 20px;
+  font-style: italic;
+  color: var(--text-dim);
+}
+
+.annot.northlbl {
+  left: 123px;
+  top: 1015px;
+  width: 400px;
+  height: 30px;
+  font-style: italic;
+  color: var(--text-dim);
+  line-height: 1.2;
+}
+
+.annot.entryexit {
+  left: 558px;
+  top: 952px;
+  width: 150px;
+  height: 58px;
+  gap: 6px;
+  font-size: 9px;
+}
+
+.annot.entryexit span {
+  border: 1px solid var(--line);
+  padding: 2px 5px;
+  background: var(--panel-2);
+}
+
+.annot.entrybottom {
+  left: 435px;
+  top: 831px;
+  width: 58px;
+  height: 58px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-dim);
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}

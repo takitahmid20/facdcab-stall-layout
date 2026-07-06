@@ -1,0 +1,374 @@
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Header from './components/Header';
+import HallGrid from './components/HallGrid';
+import Legend from './components/Legend';
+import DescriptionCard from './components/DescriptionCard';
+import CheckoutModal from './components/CheckoutModal';
+import ConfirmationModal from './components/ConfirmationModal';
+import Toast from './components/Toast';
+import SSLCommerzGateway from './components/SSLCommerzGateway';
+import './styles/index.css';
+import './styles/Modal.css';
+
+// Seed booking config
+const BOOKED_SEED = [6, 7, 8, 20, 44, 63, 77, 89];
+const HELD_OTHER_SEED = [68, 30];
+
+// Helper to construct all unit objects matching coordinates engine
+function buildInitialUnits() {
+  const units = [];
+
+  function addUnit(nums, left, top, width, height, isCorner) {
+    const price = isCorner ? 160000 : 80000;
+    const label = nums.length > 1 ? nums.slice().sort((a, b) => a - b).join(' · ') : String(nums[0]);
+    const id = 'u' + nums.slice().sort((a, b) => a - b).join('-');
+
+    let status = 'available';
+    let holdRemaining = 0;
+
+    // Seed state initialization
+    if (nums.some(n => BOOKED_SEED.includes(n)) || id === 'u41-42') {
+      status = 'booked';
+    } else if (nums.some(n => HELD_OTHER_SEED.includes(n))) {
+      status = 'held-other';
+      holdRemaining = 20 + Math.floor(Math.random() * 30);
+    }
+
+    units.push({
+      id,
+      nums,
+      label,
+      price,
+      left,
+      top,
+      width,
+      height,
+      isCorner,
+      status,
+      holdRemaining,
+    });
+  }
+
+  // left column (col 0): x = 0px
+  addUnit([52, 51], 0, 78, 58, 121, true);
+  addUnit([49, 50], 0, 267, 58, 121, true);
+  addUnit([48], 0, 393, 58, 58, false);
+  addUnit([47], 0, 456, 58, 58, false);
+  addUnit([46], 0, 519, 58, 58, false);
+  addUnit([45], 0, 582, 58, 58, false);
+  addUnit([44], 0, 645, 58, 58, false);
+  addUnit([43], 0, 708, 58, 58, false);
+  addUnit([42, 41], 0, 771, 58, 121, true);
+
+  // top horizontal row: y = 78px
+  addUnit([53, 54], 123, 78, 121, 58, true);
+  addUnit([55], 249, 78, 58, 58, false);
+  addUnit([56], 312, 78, 58, 58, false);
+  addUnit([57, 58], 375, 78, 121, 58, true);
+
+  // middle clusters
+  const clusterRows = [
+    { top: 204, bottom: 267, nums: [59, 60, 61, 62, 63, 64, 65, 66] },
+    { top: 350, bottom: 413, nums: [67, 68, 69, 70, 71, 72, 73, 74] },
+    { top: 496, bottom: 559, nums: [75, 76, 77, 78, 79, 80, 81, 82] },
+    { top: 642, bottom: 705, nums: [83, 84, 85, 86, 87, 88, 89, 90] }
+  ];
+  clusterRows.forEach(c => {
+    addUnit([c.nums[0]], 123, c.top, 58, 58, false);
+    addUnit([c.nums[1]], 186, c.top, 58, 58, false);
+    addUnit([c.nums[2]], 249, c.top, 58, 58, false);
+    addUnit([c.nums[3]], 312, c.top, 58, 58, false);
+    addUnit([c.nums[4]], 123, c.bottom, 58, 58, false);
+    addUnit([c.nums[5]], 186, c.bottom, 58, 58, false);
+    addUnit([c.nums[6]], 249, c.bottom, 58, 58, false);
+    addUnit([c.nums[7]], 312, c.bottom, 58, 58, false);
+  });
+
+  // bottom horizontal row: y = 892px (diagonal point contact with 41, starts at x = 58px)
+  addUnit([39, 40], 58, 892, 121, 58, true);
+  addUnit([38], 184, 892, 58, 58, false);
+  addUnit([37], 247, 892, 58, 58, false);
+  addUnit([36], 310, 892, 58, 58, false);
+  addUnit([34, 35], 373, 892, 121, 58, true);
+
+  // Aisle 1 column (x = 435px)
+  addUnit([24, 25], 435, 204, 58, 121, true);
+  [26, 27, 28, 29, 30, 31].forEach((n, i) => {
+    addUnit([n], 435, 330 + i * 63, 58, 58, false);
+  });
+  addUnit([32, 33], 435, 708, 58, 121, true);
+
+  // Aisle 2 Top Corner: y = 78px
+  addUnit([14, 13], 558, 78, 181, 58, true);
+
+  // Aisle 2 Stalls (x = 558px)
+  addUnit([22, 23], 558, 204, 58, 121, true);
+  [21, 20, 19, 18, 17].forEach((n, i) => {
+    addUnit([n], 558, 330 + i * 63, 58, 58, false);
+  });
+  addUnit([15, 16], 558, 645, 58, 121, true);
+
+  // Rightmost column (x = 739px)
+  addUnit([11, 12], 739, 136, 58, 121.5, true);
+  [10, 9, 8, 7, 6, 5, 4, 3].forEach((n, i) => {
+    addUnit([n], 739, 263 + i * 63.5, 58, 58, false);
+  });
+  addUnit([2, 1], 739, 771, 58, 121, true);
+
+  return units;
+}
+
+export default function App() {
+  const [units, setUnits] = useState(buildInitialUnits);
+  const [heldUnitIds, setHeldUnitIds] = useState([]);
+  const [selectedUnitId, setSelectedUnitId] = useState(null);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmData, setConfirmData] = useState(null);
+  const [gatewayOpen, setGatewayOpen] = useState(false);
+  const [gatewayData, setGatewayData] = useState(null);
+  const [toasts, setToasts] = useState([]);
+
+  // Stats calculation
+  const stats = {
+    available: units.filter((u) => u.status === 'available').length,
+    onHold: units.filter((u) => u.status === 'held-mine' || u.status === 'held-other').length,
+    booked: units.filter((u) => u.status === 'booked').length,
+  };
+
+  // Toast helper
+  const addToast = (text) => {
+    const id = Date.now() + Math.random();
+    setToasts((prev) => [...prev, { id, text }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4000);
+  };
+
+  // Hold Timer Effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setUnits((prevUnits) => {
+        const expiredMineIds = [];
+        const nextUnits = prevUnits.map((u) => {
+          if (u.status === 'held-mine' || u.status === 'held-other') {
+            const nextVal = u.holdRemaining - 1;
+            if (nextVal <= 0) {
+              if (u.status === 'held-mine') {
+                expiredMineIds.push(u.id);
+              }
+              return { ...u, status: 'available', holdRemaining: 0 };
+            }
+            return { ...u, holdRemaining: nextVal };
+          }
+          return u;
+        });
+
+        if (expiredMineIds.length > 0) {
+          setHeldUnitIds((prev) => prev.filter((id) => !expiredMineIds.includes(id)));
+          expiredMineIds.forEach((id) => {
+            const label = prevUnits.find((u) => u.id === id)?.label;
+            if (label) addToast(`Hold expired for Stall ${label}`);
+          });
+        }
+        return nextUnits;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleStallClick = (id) => {
+    const unit = units.find((u) => u.id === id);
+    if (!unit) return;
+
+    setSelectedUnitId(id);
+
+    if (unit.status === 'available') {
+      // Hold this unit
+      setUnits((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, status: 'held-mine', holdRemaining: 60 } : u))
+      );
+      setHeldUnitIds((prev) => [...prev, id]);
+      addToast(`Stall ${unit.label} placed on hold for 60s.`);
+    } else if (unit.status === 'held-mine') {
+      // Release this unit
+      setUnits((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, status: 'available', holdRemaining: 0 } : u))
+      );
+      setHeldUnitIds((prev) => prev.filter((heldId) => heldId !== id));
+      addToast(`Released hold on Stall ${unit.label}.`);
+    }
+  };
+
+  const handleCancelHold = () => {
+    if (heldUnitIds.length === 0) return;
+    setUnits((prev) =>
+      prev.map((u) => (heldUnitIds.includes(u.id) ? { ...u, status: 'available', holdRemaining: 0 } : u))
+    );
+    setHeldUnitIds([]);
+    setSelectedUnitId(null);
+    setCheckoutOpen(false);
+    addToast('Released hold on all selected stalls.');
+  };
+
+  const handleCheckoutSubmit = (formData) => {
+    if (heldUnitIds.length === 0) return;
+    const heldStallsList = units.filter((u) => heldUnitIds.includes(u.id));
+    const totalAmount = heldStallsList.reduce((sum, u) => sum + u.price, 0);
+    const combinedLabels = heldStallsList.map((u) => u.label).join(', ');
+
+    setGatewayData({
+      stallIds: [...heldUnitIds],
+      stallLabel: combinedLabels,
+      email: formData.email,
+      amount: totalAmount,
+      name: formData.name,
+      orderId: `EXPO-MULTI-${Date.now()}`,
+      storeId: import.meta.env.VITE_SSLCOMMERZ_STORE_ID || 'asdas6971c45b4de59',
+    });
+
+    setCheckoutOpen(false);
+    setGatewayOpen(true);
+    addToast('Redirecting to SSLCommerz Secure Payment Gateway...');
+  };
+
+  const handlePaymentSuccess = () => {
+    if (!gatewayData) return;
+
+    // Book units permanently
+    setUnits((prev) =>
+      prev.map((u) => (gatewayData.stallIds.includes(u.id) ? { ...u, status: 'booked', holdRemaining: 0 } : u))
+    );
+
+    setConfirmData({
+      stallLabel: gatewayData.stallLabel,
+      email: gatewayData.email,
+      amount: gatewayData.amount,
+      name: gatewayData.name,
+    });
+
+    setHeldUnitIds([]);
+    setSelectedUnitId(null);
+    setGatewayOpen(false);
+    setConfirmOpen(true);
+    addToast(`Stalls ${gatewayData.stallLabel} booked successfully!`);
+  };
+
+  const handlePaymentFailure = () => {
+    setGatewayOpen(false);
+    addToast('Payment cancelled or failed. Stall holds remain active.');
+  };
+
+  const handleReset = () => {
+    if (window.confirm('Reset the map back to default demo state?')) {
+      setUnits(buildInitialUnits());
+      setHeldUnitIds([]);
+      setSelectedUnitId(null);
+      setCheckoutOpen(false);
+      setConfirmOpen(false);
+      setGatewayOpen(false);
+      setGatewayData(null);
+      addToast('Prototype reset successfully.');
+    }
+  };
+
+  const heldStalls = units.filter((u) => heldUnitIds.includes(u.id));
+  const selectedUnit = units.find((u) => u.id === selectedUnitId);
+
+  const minHoldRemaining = heldStalls.length > 0 ? Math.min(...heldStalls.map((u) => u.holdRemaining)) : 0;
+  const combinedLabels = heldStalls.map((u) => u.label).join(', ');
+  const totalHeldPrice = heldStalls.reduce((sum, u) => sum + u.price, 0);
+
+  // Format currency helpers for panel BDT formatting
+  const fmtBDTLocal = (n) => {
+    const s = String(n);
+    const last3 = s.slice(-3);
+    let rest = s.slice(0, -3);
+    if (rest.length) rest = rest.replace(/\B(?=(\d{2})+(?!\d)$)/g, ',');
+    return '৳' + (rest.length ? rest + ',' : '') + last3;
+  };
+
+  return (
+    <>
+      <Navbar />
+      <Header stats={stats} />
+
+      <div className="layout">
+        <HallGrid units={units} onStallClick={handleStallClick} />
+
+        <div className="side-panel">
+          <Legend />
+          <DescriptionCard
+            selectedUnit={selectedUnit}
+            onBookClick={() => setCheckoutOpen(true)}
+            onReleaseClick={handleCancelHold}
+          />
+        </div>
+      </div>
+
+      {/* Floating Hold Panel */}
+      {heldStalls.length > 0 && !checkoutOpen && (
+        <div className="hold-panel">
+          <div className="hold-head">
+            <span className="lbl">{heldStalls.length} {heldStalls.length === 1 ? 'Stall' : 'Stalls'} Held</span>
+            <button className="hold-close" onClick={handleCancelHold}>✕</button>
+          </div>
+          <div className="hold-stall" style={{ fontSize: '14px', whiteSpace: 'normal', maxHeight: '60px', overflowY: 'auto' }}>
+            Stalls: {combinedLabels}
+          </div>
+          <div className="hold-price">
+            Total Price: {fmtBDTLocal(totalHeldPrice)}
+          </div>
+          <div className="hold-timer-row">
+            <div className="hold-timer">Expires: {minHoldRemaining}s</div>
+            <div className="hold-timer-bar">
+              <i style={{ width: `${(minHoldRemaining / 60) * 100}%` }}></i>
+            </div>
+          </div>
+          <div className="hold-actions">
+            <button className="btn btn-ghost" onClick={handleCancelHold}>Release All</button>
+            <button className="btn btn-gold" onClick={() => setCheckoutOpen(true)}>Book Now</button>
+          </div>
+        </div>
+      )}
+
+      {/* Checkout Modal */}
+      {checkoutOpen && heldStalls.length > 0 && (
+        <CheckoutModal
+          heldStalls={heldStalls}
+          onClose={() => setCheckoutOpen(false)}
+          onSubmit={handleCheckoutSubmit}
+        />
+      )}
+
+      {/* Confirmation Modal */}
+      {confirmOpen && confirmData && (
+        <ConfirmationModal
+          data={confirmData}
+          onClose={() => setConfirmOpen(false)}
+        />
+      )}
+
+      {/* SSLCommerz Payment Gateway Portal */}
+      {gatewayOpen && gatewayData && (
+        <SSLCommerzGateway
+          amount={gatewayData.amount}
+          orderId={gatewayData.orderId}
+          storeId={gatewayData.storeId}
+          onSuccess={handlePaymentSuccess}
+          onFailure={handlePaymentFailure}
+        />
+      )}
+
+      {/* Toast wrap container */}
+      <Toast toasts={toasts} />
+
+      {/* Reset button */}
+      <button className="reset-btn" onClick={handleReset}>
+        ↺ Reset prototype
+      </button>
+    </>
+  );
+}

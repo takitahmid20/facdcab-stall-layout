@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.DS_Store
+.env
+*.zip
+*.log
+.system_generated/
+.gemini/
+build/
+out/
