@@ -55,7 +55,7 @@ export default function Annotation() {
       {/* Service Door — left side, vertical text */}
       <div style={{
         ...annotBase,
-        left: '11.5px', top: '204px', width: '35px', height: '58px',
+        left: '11.5px', top: '252px', width: '35px', height: '58px',
         writingMode: 'vertical-rl',
         fontSize: '8.5px',
         border: '1px solid #e2e8f0',
@@ -79,7 +79,7 @@ export default function Annotation() {
       {/* Entry — bottom-middle of floor plan */}
       <div style={{
         ...annotBase,
-        left: '435px', top: '831px', width: '58px', height: '58px',
+        left: '558px', top: '831px', width: '58px', height: '58px',
         fontSize: '10px',
         fontWeight: '700',
         color: '#475569',

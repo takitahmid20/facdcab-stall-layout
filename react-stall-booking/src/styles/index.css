@@ -59,8 +59,8 @@ body::before {
 
 /* Custom background patterns for striped booked/held-other cells */
 .stripe-booked {
-  background-image: repeating-linear-gradient(45deg, #cbd5e1 0px, #cbd5e1 2px, #f1f5f9 2px, #f1f5f9 8px);
+  background-image: repeating-linear-gradient(45deg, #cbd5e1 0px, #cbd5e1 2.5px, #e2e8f0 2.5px, #e2e8f0 8px);
 }
 .stripe-held-other {
-  background-image: repeating-linear-gradient(45deg, rgba(245, 158, 11, 0.06) 0px, rgba(245, 158, 11, 0.06) 2px, transparent 2px, transparent 8px);
+  background-image: repeating-linear-gradient(45deg, rgba(245, 158, 11, 0.18) 0px, rgba(245, 158, 11, 0.18) 2.5px, #fffbeb 2.5px, #fffbeb 8px);
 }

@@ -7,7 +7,6 @@ import DescriptionCard from './components/DescriptionCard';
 import CheckoutModal from './components/CheckoutModal';
 import ConfirmationModal from './components/ConfirmationModal';
 import Toast from './components/Toast';
-import SSLCommerzGateway from './components/SSLCommerzGateway';
 import './styles/index.css';
 import './styles/Modal.css';
 
@@ -18,9 +17,10 @@ const HELD_OTHER_SEED = [68, 30];
 // Helper to construct all unit objects matching coordinates engine
 function buildInitialUnits() {
   const units = [];
+  const localBooked = JSON.parse(localStorage.getItem('booked_stalls_store') || '[]');
 
   function addUnit(nums, left, top, width, height, isCorner) {
-    const price = nums.length > 1 ? 160000 : 80000;
+    const price = nums.length * 80000;
     const label = nums.length > 1 ? nums.slice().sort((a, b) => a - b).join(' · ') : String(nums[0]);
     const id = 'u' + nums.slice().sort((a, b) => a - b).join('-');
 
@@ -28,7 +28,7 @@ function buildInitialUnits() {
     let holdRemaining = 0;
 
     // Seed state initialization
-    if (nums.some(n => BOOKED_SEED.includes(n)) || id === 'u41-42') {
+    if (nums.some(n => BOOKED_SEED.includes(n)) || localBooked.includes(id) || id === 'u41-42') {
       status = 'booked';
     } else if (nums.some(n => HELD_OTHER_SEED.includes(n))) {
       status = 'held-other';
@@ -51,65 +51,78 @@ function buildInitialUnits() {
   }
 
   // left column (col 0): x = 0px
-  addUnit([52, 51], 0, 78, 58, 121, true);
-  addUnit([49, 50], 0, 267, 58, 121, true);
-  addUnit([48], 0, 393, 58, 58, false);
-  addUnit([47], 0, 456, 58, 58, false);
-  addUnit([46], 0, 519, 58, 58, false);
-  addUnit([45], 0, 582, 58, 58, false);
-  addUnit([44], 0, 645, 58, 58, false);
-  addUnit([43], 0, 708, 58, 58, false);
-  addUnit([42, 41], 0, 771, 58, 121, true);
+  // 54-55-56 is a triple L-shape corner block
+  addUnit([54, 55, 56], 0, 78, 116, 116, true);
+  
+  addUnit([53], 0, 194, 58, 58, false);
+  
+  // 51-52 is a vertical pair
+  addUnit([51, 52], 0, 310, 58, 116, true);
+  
+  [50, 49, 48, 47, 46].forEach((n, i) => {
+    addUnit([n], 0, 426 + i * 58, 58, 58, false);
+  });
+  
+  // 44-45 is a vertical pair
+  addUnit([44, 45], 0, 716, 58, 116, true);
+
+  // 41-42-43 is a triple L-shape corner pair
+  addUnit([43, 42, 41], 0, 832, 116, 116, true);
 
   // top horizontal row: y = 78px
-  addUnit([53, 54], 123, 78, 121, 58, true);
-  addUnit([55], 249, 78, 58, 58, false);
-  addUnit([56], 312, 78, 58, 58, false);
-  addUnit([57, 58], 375, 78, 121, 58, true);
+  // 57-58 is a horizontal pair
+  addUnit([57, 58], 121, 78, 121, 58, true);
+  addUnit([59], 248, 78, 58, 58, false);
+  addUnit([60], 311, 78, 58, 58, false);
+  // 61-62 is a horizontal pair
+  addUnit([61, 62], 374, 78, 121, 58, true);
 
-  // middle clusters (combined horizontal pairs: 59-60, 61-62, etc. each taking 121px width)
+  // middle clusters — all paired as 2x2 grids
   const clusterRows = [
-    { top: 204, bottom: 267, nums: [59, 60, 61, 62, 63, 64, 65, 66] },
-    { top: 350, bottom: 413, nums: [67, 68, 69, 70, 71, 72, 73, 74] },
-    { top: 496, bottom: 559, nums: [75, 76, 77, 78, 79, 80, 81, 82] },
-    { top: 642, bottom: 705, nums: [83, 84, 85, 86, 87, 88, 89, 90] }
+    { top: 204, bottom: 267, pairs: [[65, 66], [63, 64], [67, 68], [69, 70]] },
+    { top: 350, bottom: 413, pairs: [[71, 72], [73, 74], [75, 76], [77, 78]] },
+    { top: 496, bottom: 559, pairs: [[81, 82], [79, 80], [83, 84], [85, 86]] },
+    { top: 642, bottom: 705, pairs: [[89, 90], [87, 88], [91, 92], [93, 94]] }
   ];
   clusterRows.forEach(c => {
-    addUnit([c.nums[0], c.nums[1]], 123, c.top, 121, 58, false);
-    addUnit([c.nums[2], c.nums[3]], 249, c.top, 121, 58, false);
-    addUnit([c.nums[4], c.nums[5]], 123, c.bottom, 121, 58, false);
-    addUnit([c.nums[6], c.nums[7]], 249, c.bottom, 121, 58, false);
+    addUnit(c.pairs[0], 123, c.top, 121, 58, true);
+    addUnit(c.pairs[1], 249, c.top, 121, 58, true);
+    addUnit(c.pairs[2], 123, c.bottom, 121, 58, true);
+    addUnit(c.pairs[3], 249, c.bottom, 121, 58, true);
   });
 
-  // bottom horizontal row: y = 892px (diagonal point contact with 41, starts at x = 58px)
-  addUnit([39, 40], 58, 892, 121, 58, true);
-  addUnit([38], 184, 892, 58, 58, false);
-  addUnit([37], 247, 892, 58, 58, false);
-  addUnit([36], 310, 892, 58, 58, false);
-  addUnit([34, 35], 373, 892, 121, 58, true);
+  // bottom horizontal row: y = 892px (shifted right for 41-42-43)
+  addUnit([40], 121, 892, 58, 58, false);
+  addUnit([39], 184, 892, 58, 58, false);
+  addUnit([38], 247, 892, 58, 58, false);
+  addUnit([37], 310, 892, 58, 58, false);
+  
+  // 35-36 remains paired
+  addUnit([35, 36], 373, 892, 121, 58, true);
 
-  // Aisle 1 column (x = 435px)
-  addUnit([24, 25], 435, 204, 58, 121, true);
-  [26, 27, 28, 29, 30, 31].forEach((n, i) => {
-    addUnit([n], 435, 330 + i * 63, 58, 58, false);
+  // Aisle 1 column (x = 495px, tiny 5px gap with Aisle 2)
+  [25, 26, 27, 28, 29, 30, 31, 32, 33, 34].forEach((n, i) => {
+    addUnit([n], 495, 204 + i * 63, 58, 58, false);
   });
-  addUnit([32, 33], 435, 708, 58, 121, true);
 
   // Aisle 2 Top Corner: y = 78px
-  addUnit([14, 13], 558, 78, 181, 58, true);
+  // 12-13-14 is a triple corner pair (moved 14 next to 13)
+  addUnit([14, 13, 12], 681, 78, 116, 116, true);
 
   // Aisle 2 Stalls (x = 558px)
-  addUnit([22, 23], 558, 204, 58, 121, true);
-  [21, 20, 19, 18, 17].forEach((n, i) => {
-    addUnit([n], 558, 330 + i * 63, 58, 58, false);
+  [24, 23, 22, 21, 20, 19, 18, 17, 16, 15].forEach((n, i) => {
+    addUnit([n], 558, 204 + i * 63, 58, 58, false);
   });
-  addUnit([15, 16], 558, 645, 58, 121, true);
 
   // Rightmost column (x = 739px)
-  addUnit([11, 12], 739, 136, 58, 121.5, true);
-  [10, 9, 8, 7, 6, 5, 4, 3].forEach((n, i) => {
-    addUnit([n], 739, 263 + i * 63.5, 58, 58, false);
+  // 10-11 is a paired unit
+  addUnit([11, 10], 739, 199.5, 58, 121.5, true);
+  
+  [9, 8, 7, 6, 5, 4, 3].forEach((n, i) => {
+    addUnit([n], 739, 326.5 + i * 63.5, 58, 58, false);
   });
+  
+  // 1-2 remains paired
   addUnit([2, 1], 739, 771, 58, 121, true);
 
   return units;
@@ -122,9 +135,38 @@ export default function App() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmData, setConfirmData] = useState(null);
-  const [gatewayOpen, setGatewayOpen] = useState(false);
-  const [gatewayData, setGatewayData] = useState(null);
   const [toasts, setToasts] = useState([]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const payStatus = urlParams.get('payment_status');
+    const tranId = urlParams.get('tran_id');
+
+    if (payStatus) {
+      const savedOrderStr = localStorage.getItem('pending_stall_order');
+      if (savedOrderStr) {
+        const order = JSON.parse(savedOrderStr);
+        if (payStatus === 'success') {
+          // Permanently book units locally
+          const localBooked = JSON.parse(localStorage.getItem('booked_stalls_store') || '[]');
+          const updatedBooked = [...new Set([...localBooked, ...order.stallIds])];
+          localStorage.setItem('booked_stalls_store', JSON.stringify(updatedBooked));
+
+          // Redirect to invoice success page
+          window.location.href = `/success?tran_id=${tranId || ''}&amount=${urlParams.get('amount') || order.amount}&bank_tran_id=${urlParams.get('bank_tran_id') || ''}`;
+          return;
+        } else if (payStatus === 'fail') {
+          addToast(`Payment failed for Stalls ${order.stallLabel}. Please try again.`);
+          localStorage.removeItem('pending_stall_order');
+        } else if (payStatus === 'cancel') {
+          addToast(`Payment cancelled for Stalls ${order.stallLabel}.`);
+          localStorage.removeItem('pending_stall_order');
+        }
+      }
+      // Clean query params from URL without refreshing page
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   // Stats calculation
   const stats = {
@@ -231,63 +273,80 @@ export default function App() {
     addToast('Released hold on all selected stalls.');
   };
 
-  const handleCheckoutSubmit = (formData) => {
+  const handleCheckoutSubmit = async (formData) => {
     if (heldUnitIds.length === 0) return;
     const heldStallsList = units.filter((u) => heldUnitIds.includes(u.id));
     const totalAmount = heldStallsList.reduce((sum, u) => sum + u.price, 0);
     const combinedLabels = heldStallsList.map((u) => u.label).join(', ');
+    const orderId = `EXPO-MULTI-${Date.now()}`;
 
-    setGatewayData({
+    // Store in localStorage to recover after redirect
+    const pendingOrder = {
       stallIds: [...heldUnitIds],
       stallLabel: combinedLabels,
       email: formData.email,
       amount: totalAmount,
       name: formData.name,
-      orderId: `EXPO-MULTI-${Date.now()}`,
-      storeId: import.meta.env.VITE_SSLCOMMERZ_STORE_ID || 'asdas6971c45b4de59',
-    });
+      phone: formData.phone,
+      orderId,
+    };
+    localStorage.setItem('pending_stall_order', JSON.stringify(pendingOrder));
 
-    setCheckoutOpen(false);
-    setGatewayOpen(true);
     addToast('Redirecting to SSLCommerz Secure Payment Gateway...');
-  };
 
-  const handlePaymentSuccess = () => {
-    if (!gatewayData) return;
+    try {
+      const params = new URLSearchParams();
+      params.append('store_id', import.meta.env.VITE_SSLCOMMERZ_STORE_ID || 'asdas6971c45b4de59');
+      params.append('store_passwd', import.meta.env.VITE_SSLCOMMERZ_STORE_PASSWORD || 'asdas6971c45b4de59@ssl');
+      params.append('total_amount', String(totalAmount));
+      params.append('currency', 'BDT');
+      params.append('tran_id', orderId);
+      params.append('success_url', `${window.location.origin}/api/callback?status=success`);
+      params.append('fail_url', `${window.location.origin}/api/callback?status=fail`);
+      params.append('cancel_url', `${window.location.origin}/api/callback?status=cancel`);
+      
+      params.append('cus_name', formData.name);
+      params.append('cus_email', formData.email);
+      params.append('cus_phone', formData.phone);
+      params.append('cus_add1', 'Dhaka');
+      params.append('cus_city', 'Dhaka');
+      params.append('cus_country', 'Bangladesh');
+      params.append('shipping_method', 'NO');
+      params.append('product_name', combinedLabels);
+      params.append('product_category', 'Stall');
+      params.append('product_profile', 'general');
 
-    // Book units permanently
-    setUnits((prev) =>
-      prev.map((u) => (gatewayData.stallIds.includes(u.id) ? { ...u, status: 'booked', holdRemaining: 0 } : u))
-    );
+      const response = await fetch('/api/initiate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+      });
 
-    setConfirmData({
-      stallLabel: gatewayData.stallLabel,
-      email: gatewayData.email,
-      amount: gatewayData.amount,
-      name: gatewayData.name,
-    });
-
-    setHeldUnitIds([]);
-    setSelectedUnitId(null);
-    setGatewayOpen(false);
-    setConfirmOpen(true);
-    addToast(`Stalls ${gatewayData.stallLabel} booked successfully!`);
-  };
-
-  const handlePaymentFailure = () => {
-    setGatewayOpen(false);
-    addToast('Payment cancelled or failed. Stall holds remain active.');
+      const data = await response.json();
+      if (data.status === 'SUCCESS' && data.GatewayPageURL) {
+        window.location.href = data.GatewayPageURL;
+      } else {
+        addToast(`Gateway initiation failed: ${data.failedreason || 'Unknown error'}`);
+        localStorage.removeItem('pending_stall_order');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Error contacting SSLCommerz gateway. Please try again.');
+      localStorage.removeItem('pending_stall_order');
+    }
   };
 
   const handleReset = () => {
     if (window.confirm('Reset the map back to default demo state?')) {
+      localStorage.removeItem('booked_stalls_store');
+      localStorage.removeItem('pending_stall_order');
       setUnits(buildInitialUnits());
       setHeldUnitIds([]);
       setSelectedUnitId(null);
       setCheckoutOpen(false);
       setConfirmOpen(false);
-      setGatewayOpen(false);
-      setGatewayData(null);
       addToast('Prototype reset successfully.');
     }
   };
@@ -369,16 +428,7 @@ export default function App() {
         />
       )}
 
-      {/* SSLCommerz Payment Gateway Portal */}
-      {gatewayOpen && gatewayData && (
-        <SSLCommerzGateway
-          amount={gatewayData.amount}
-          orderId={gatewayData.orderId}
-          storeId={gatewayData.storeId}
-          onSuccess={handlePaymentSuccess}
-          onFailure={handlePaymentFailure}
-        />
-      )}
+
 
       {/* Toast wrap container */}
       <Toast toasts={toasts} />
