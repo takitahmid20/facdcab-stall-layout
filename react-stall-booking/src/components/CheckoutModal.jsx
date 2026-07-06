@@ -57,6 +57,14 @@ export default function CheckoutModal({ heldStalls, onClose, onSubmit }) {
   const combinedLabels = heldStalls.map((u) => u.label).join(', ');
   const minHoldRemaining = Math.min(...heldStalls.map((u) => u.holdRemaining));
 
+  // Format seconds as MM:SS for the 5-minute checkout hold
+  const fmtTime = (secs) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${String(s).padStart(2, '0')}`;
+  };
+  const timerPct = Math.min(100, (minHoldRemaining / 300) * 100);
+
   const inputClass = "w-full px-3 py-2.5 border border-slate-200 rounded-lg text-[13.5px] font-montserrat outline-none transition-all duration-150 focus:border-[#155dfc] focus:shadow-[0_0_0_3px_rgba(21,93,252,0.1)] bg-white text-slate-800";
   const labelClass = "block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-montserrat";
 
@@ -75,10 +83,18 @@ export default function CheckoutModal({ heldStalls, onClose, onSubmit }) {
 
         {/* Body */}
         <div className="p-6 flex flex-col gap-4">
-          {/* Timer */}
-          <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 font-montserrat">
-            <span className="text-[12.5px] font-semibold text-amber-700">Holds expire in:</span>
-            <b className="font-space-mono text-[18px] font-bold text-amber-600">{minHoldRemaining}s</b>
+          {/* Timer — 5 min hold during checkout */}
+          <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 font-montserrat">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[12.5px] font-semibold text-green-800">🕐 Checkout hold expires in:</span>
+              <b className="font-space-mono text-[20px] font-bold text-green-700">{fmtTime(minHoldRemaining)}</b>
+            </div>
+            <div className="w-full h-1.5 bg-green-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all duration-1000"
+                style={{ width: `${timerPct}%` }}
+              />
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">

@@ -142,7 +142,7 @@ export default function App() {
     }, 4000);
   };
 
-  // Hold Timer Effect
+  // Hold Timer Effect — ticks every second for held-mine and held-other stalls
   useEffect(() => {
     const timer = setInterval(() => {
       setUnits((prevUnits) => {
@@ -174,6 +174,28 @@ export default function App() {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Extend hold timers to 5 minutes when checkout opens; revert cap to 60s when it closes
+  useEffect(() => {
+    if (checkoutOpen) {
+      // Boost all held-mine stalls to 300s (5 minutes)
+      setUnits((prev) =>
+        prev.map((u) =>
+          u.status === 'held-mine' ? { ...u, holdRemaining: 300 } : u
+        )
+      );
+    } else {
+      // If checkout closed without booking, cap remaining time back to max 60s
+      setUnits((prev) =>
+        prev.map((u) =>
+          u.status === 'held-mine' && u.holdRemaining > 60
+            ? { ...u, holdRemaining: 60 }
+            : u
+        )
+      );
+    }
+  }, [checkoutOpen]);
+
 
   const handleStallClick = (id) => {
     const unit = units.find((u) => u.id === id);
