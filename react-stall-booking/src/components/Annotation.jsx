@@ -116,7 +116,6 @@ export default function Annotation() {
         top: '45px',
         width: '400px',
         height: '20px',
-        transform: 'rotate(180deg)',
       }}>
         South
       </div>
@@ -138,7 +137,6 @@ export default function Annotation() {
         top: '1015px',
         width: '400px',
         height: '30px',
-        transform: 'rotate(180deg)',
       }}>
         69'<br />North
       </div>
