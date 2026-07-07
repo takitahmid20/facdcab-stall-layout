@@ -11,7 +11,7 @@ import './styles/index.css';
 import './styles/Modal.css';
 
 // Seed booking config
-const BOOKED_SEED = [6, 7, 8, 20, 44, 61, 62, 63, 64, 69, 70, 71, 72, 77, 78, 79, 80, 85, 86, 87, 88];
+const BOOKED_SEED = [6, 7, 8, 20, 44, 61, 62, 63, 64, 69, 70, 71, 72, 79, 80, 85, 86, 87, 88];
 const HELD_OTHER_SEED = [68, 30];
 
 // Helper to construct all unit objects matching coordinates engine
@@ -19,111 +19,83 @@ function buildInitialUnits() {
   const units = [];
   const localBooked = JSON.parse(localStorage.getItem('booked_stalls_store') || '[]');
 
-  function addUnit(nums, left, top, width, height, isCorner) {
-    const price = nums.length * 80000;
-    const label = nums.length > 1 ? nums.slice().sort((a, b) => a - b).join(' · ') : String(nums[0]);
-    const id = 'u' + nums.slice().sort((a, b) => a - b).join('-');
+  function addUnit(num, left, top) {
+    const price = 80000;
+    const label = String(num);
+    const id = 'u' + num;
 
     let status = 'available';
     let holdRemaining = 0;
 
     // Seed state initialization
-    if (nums.some(n => BOOKED_SEED.includes(n)) || localBooked.includes(id) || id === 'u41-42') {
+    if (BOOKED_SEED.includes(num) || localBooked.includes(id)) {
       status = 'booked';
-    } else if (nums.some(n => HELD_OTHER_SEED.includes(n))) {
+    } else if (HELD_OTHER_SEED.includes(num)) {
       status = 'held-other';
       holdRemaining = 20 + Math.floor(Math.random() * 30);
     }
 
     units.push({
       id,
-      nums,
+      nums: [num],
       label,
       price,
       left,
       top,
-      width,
-      height,
-      isCorner,
+      width: 58,
+      height: 58,
+      isCorner: false,
       status,
       holdRemaining,
     });
   }
 
-  // left column (col 0): x = 0px
-  // 54-55-56 is a triple L-shape corner block
-  addUnit([54, 55, 56], 0, 78, 116, 116, true);
-  
-  addUnit([53], 0, 194, 58, 58, false);
-  
-  // 51-52 is a vertical pair
-  addUnit([51, 52], 0, 310, 58, 116, true);
-  
-  [50, 49, 48, 47, 46].forEach((n, i) => {
-    addUnit([n], 0, 426 + i * 58, 58, 58, false);
+  // Top row (South wall): 48 -> 54, left to right — offset one stall right so
+  // stall 47's top-right corner touches stall 48's bottom-left corner
+  [48, 49, 50, 51, 52, 53, 54].forEach((n, i) => {
+    addUnit(n, 58 + i * 58, 78);
   });
-  
-  // 44-45 is a vertical pair
-  addUnit([44, 45], 0, 716, 58, 116, true);
 
-  // 41-42-43 is a triple L-shape corner pair
-  addUnit([43, 42, 41], 0, 832, 116, 116, true);
+  // Left column (col 0): 47, 46 sit under stall 48, then a gap for the
+  // Service Door, then 45 -> 36 continue down to meet the bottom row
+  const col0Ys = [136, 194, 310, 368, 426, 484, 542, 600, 658, 716, 774, 832];
+  [47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36].forEach((n, i) => {
+    addUnit(n, 0, col0Ys[i]);
+  });
 
-  // top horizontal row: y = 78px
-  // 57-58 is a horizontal pair
-  addUnit([57, 58], 121, 78, 121, 58, true);
-  addUnit([59], 248, 78, 58, 58, false);
-  addUnit([60], 311, 78, 58, 58, false);
-  // 61-62 is a horizontal pair
-  addUnit([61, 62], 374, 78, 121, 58, true);
+  // Bottom row (North wall): 35 -> 29, left to right — offset one stall right so
+  // stall 36's bottom-right corner touches stall 35's top-left corner
+  [35, 34, 33, 32, 31, 30, 29].forEach((n, i) => {
+    addUnit(n, 58 + i * 58, 890);
+  });
 
-  // middle clusters — all paired as 2x2 grids
+  // Middle clusters — four stacked 2x4 blocks, always a clean rectangle
+  const clusterCols = [123, 181, 239, 297];
   const clusterRows = [
-    { top: 204, bottom: 267, pairs: [[65, 66], [63, 64], [67, 68], [69, 70]] },
-    { top: 350, bottom: 413, pairs: [[71, 72], [73, 74], [75, 76], [77, 78]] },
-    { top: 496, bottom: 559, pairs: [[81, 82], [79, 80], [83, 84], [85, 86]] },
-    { top: 642, bottom: 705, pairs: [[89, 90], [87, 88], [91, 92], [93, 94]] }
+    { top: 204, bottom: 267, topNums: [58, 57, 56, 55], bottomNums: [59, 60, 61, 62] },
+    { top: 350, bottom: 413, topNums: [63, 64, 65, 66], bottomNums: [67, 68, 69, 70] },
+    { top: 496, bottom: 559, topNums: [71, 72, 73, 74], bottomNums: [75, 76, 77, 78] },
+    { top: 642, bottom: 705, topNums: [79, 80, 81, 82], bottomNums: [83, 84, 85, 86] },
   ];
   clusterRows.forEach(c => {
-    addUnit(c.pairs[0], 123, c.top, 121, 58, true);
-    addUnit(c.pairs[1], 249, c.top, 121, 58, true);
-    addUnit(c.pairs[2], 123, c.bottom, 121, 58, true);
-    addUnit(c.pairs[3], 249, c.bottom, 121, 58, true);
+    c.topNums.forEach((n, i) => addUnit(n, clusterCols[i], c.top));
+    c.bottomNums.forEach((n, i) => addUnit(n, clusterCols[i], c.bottom));
   });
 
-  // bottom horizontal row: y = 892px (shifted right for 41-42-43)
-  addUnit([40], 121, 892, 58, 58, false);
-  addUnit([39], 184, 892, 58, 58, false);
-  addUnit([38], 247, 892, 58, 58, false);
-  addUnit([37], 310, 892, 58, 58, false);
-  
-  // 35-36 remains paired
-  addUnit([35, 36], 373, 892, 121, 58, true);
-
-  // Aisle 1 column (x = 495px, tiny 5px gap with Aisle 2)
-  [25, 26, 27, 28, 29, 30, 31, 32, 33, 34].forEach((n, i) => {
-    addUnit([n], 495, 204 + i * 63, 58, 58, false);
+  // Aisle column (x = 495px): 19 -> 28, top to bottom
+  [19, 20, 21, 22, 23, 24, 25, 26, 27, 28].forEach((n, i) => {
+    addUnit(n, 495, 204 + i * 63);
   });
 
-  // Aisle 2 Top Corner: y = 78px
-  // 12-13-14 is a triple corner pair (moved 14 next to 13)
-  addUnit([14, 13, 12], 681, 78, 116, 116, true);
-
-  // Aisle 2 Stalls (x = 558px)
-  [24, 23, 22, 21, 20, 19, 18, 17, 16, 15].forEach((n, i) => {
-    addUnit([n], 558, 204 + i * 63, 58, 58, false);
+  // Next column (x = 558px): 18 -> 10, top to bottom
+  [18, 17, 16, 15, 14, 13, 12, 11, 10].forEach((n, i) => {
+    addUnit(n, 558, 204 + i * 63);
   });
 
-  // Rightmost column (x = 739px)
-  // 10-11 is a paired unit
-  addUnit([11, 10], 739, 199.5, 58, 121.5, true);
-  
-  [9, 8, 7, 6, 5, 4, 3].forEach((n, i) => {
-    addUnit([n], 739, 326.5 + i * 63.5, 58, 58, false);
+  // Rightmost column (x = 739px): 9 -> 1, top to bottom
+  [9, 8, 7, 6, 5, 4, 3, 2, 1].forEach((n, i) => {
+    addUnit(n, 739, 204 + i * 63);
   });
-  
-  // 1-2 remains paired
-  addUnit([2, 1], 739, 771, 58, 121, true);
 
   return units;
 }
