@@ -11,8 +11,18 @@ import './styles/index.css';
 import './styles/Modal.css';
 
 // Seed booking config
-const BOOKED_SEED = [6, 7, 8, 20, 44, 61, 62, 63, 64, 69, 70, 71, 72, 79, 80, 85, 86, 87, 88];
+const BOOKED_SEED = [6, 7, 8, 20, 44, 61, 62, 63, 64, 69, 70, 71, 72, 79, 80, 85, 86];
 const HELD_OTHER_SEED = [68, 30];
+
+// Package tier config — premium (middle clusters + corner stalls), sponsor (entrance stalls), rest standard
+const PREMIUM_NUMS = new Set([54, 29, 19, 28, ...Array.from({ length: 86 - 55 + 1 }, (_, i) => 55 + i)]);
+const SPONSOR_NUMS = new Set([48, 47, 36, 35, 1, 2]);
+
+function getTier(num) {
+  if (PREMIUM_NUMS.has(num)) return 'premium';
+  if (SPONSOR_NUMS.has(num)) return 'sponsor';
+  return 'standard';
+}
 
 // Helper to construct all unit objects matching coordinates engine
 function buildInitialUnits() {
@@ -45,6 +55,39 @@ function buildInitialUnits() {
       width: 58,
       height: 58,
       isCorner: false,
+      tier: getTier(num),
+      status,
+      holdRemaining,
+    });
+  }
+
+  // Vertical pair unit — two stacked stalls merged into one bookable unit
+  function addPairUnit(nums, left, top, width, height) {
+    const price = nums.length * 80000;
+    const label = nums.join(' · ');
+    const id = 'u' + nums.join('-');
+
+    let status = 'available';
+    let holdRemaining = 0;
+
+    if (nums.some(n => BOOKED_SEED.includes(n)) || localBooked.includes(id)) {
+      status = 'booked';
+    } else if (nums.some(n => HELD_OTHER_SEED.includes(n))) {
+      status = 'held-other';
+      holdRemaining = 20 + Math.floor(Math.random() * 30);
+    }
+
+    units.push({
+      id,
+      nums,
+      label,
+      price,
+      left,
+      top,
+      width,
+      height,
+      isCorner: true,
+      tier: getTier(nums[0]),
       status,
       holdRemaining,
     });
@@ -69,8 +112,7 @@ function buildInitialUnits() {
     addUnit(n, 58 + i * 58, 890);
   });
 
-  // Middle clusters — four stacked 2x4 blocks, always a clean rectangle
-  const clusterCols = [123, 181, 239, 297];
+  // Middle clusters — four stacked blocks; each row is two horizontal pair units
   const clusterRows = [
     { top: 204, bottom: 267, topNums: [58, 57, 56, 55], bottomNums: [59, 60, 61, 62] },
     { top: 350, bottom: 413, topNums: [63, 64, 65, 66], bottomNums: [67, 68, 69, 70] },
@@ -78,8 +120,10 @@ function buildInitialUnits() {
     { top: 642, bottom: 705, topNums: [79, 80, 81, 82], bottomNums: [83, 84, 85, 86] },
   ];
   clusterRows.forEach(c => {
-    c.topNums.forEach((n, i) => addUnit(n, clusterCols[i], c.top));
-    c.bottomNums.forEach((n, i) => addUnit(n, clusterCols[i], c.bottom));
+    addPairUnit([c.topNums[0], c.topNums[1]], 123, c.top, 121, 58);
+    addPairUnit([c.topNums[2], c.topNums[3]], 249, c.top, 121, 58);
+    addPairUnit([c.bottomNums[0], c.bottomNums[1]], 123, c.bottom, 121, 58);
+    addPairUnit([c.bottomNums[2], c.bottomNums[3]], 249, c.bottom, 121, 58);
   });
 
   // Aisle column (x = 495px): 19 -> 28, top to bottom
@@ -88,9 +132,12 @@ function buildInitialUnits() {
   });
 
   // Next column (x = 558px): 18 -> 10, top to bottom
-  [18, 17, 16, 15, 14, 13, 12, 11, 10].forEach((n, i) => {
-    addUnit(n, 558, 204 + i * 63);
+  // 18-17 and 11-10 are merged vertical pairs; 16-12 stay single
+  addPairUnit([18, 17], 558, 204, 58, 121);
+  [16, 15, 14, 13, 12].forEach((n, i) => {
+    addUnit(n, 558, 330 + i * 63);
   });
+  addPairUnit([11, 10], 558, 645, 58, 121);
 
   // Rightmost column (x = 739px): 9 -> 1, top to bottom
   [9, 8, 7, 6, 5, 4, 3, 2, 1].forEach((n, i) => {
