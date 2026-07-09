@@ -545,8 +545,8 @@ export default function StudentRegistration() {
           {/* RIGHT COLUMN: Sticky Real-Time ticket pass previews list (5 cols) */}
           <div className="lg:col-span-5 lg:sticky lg:top-8 flex flex-col gap-5 text-left">
             
-            {/* Compact Event Details Card */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3">
+            {/* Compact Event Details block (Transparent) */}
+            <div className="flex flex-col gap-3 pl-1 pb-2">
               <div className="flex items-center gap-3">
                 <img 
                   src="https://www.facdcab.org/images/logo.svg" 
@@ -558,10 +558,10 @@ export default function StudentRegistration() {
                     <span className="bg-[#d31212] text-white font-black text-[9px] px-1.5 py-0.5 rounded uppercase leading-none">14<sup>th</sup></span>
                     <h4 className="text-[12px] font-black tracking-tight m-0 text-slate-800 uppercase">FACD-CAB International Expo 2026</h4>
                   </div>
-                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider m-0 mt-1 leading-none">Connecting Dreams, Creating Global Opportunities</p>
+                  <p className="text-[9px] font-bold text-slate-450 uppercase tracking-wider m-0 mt-1 leading-none">Connecting Dreams, Creating Global Opportunities</p>
                 </div>
               </div>
-              <div className="border-t border-slate-100 pt-2.5 flex flex-col gap-1.5 text-[10.5px] font-semibold text-slate-600">
+              <div className="flex flex-col gap-1.5 text-[10.5px] font-semibold text-slate-600">
                 <div className="flex items-center gap-2">
                   <span className="text-[#d31212] text-xs">📅</span>
                   <span>10 & 11 July 2026 (Friday & Saturday)</span>
