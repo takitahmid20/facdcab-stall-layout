@@ -40,26 +40,26 @@ export default function RegistrationSuccess() {
 
       <div className="max-w-4xl mx-auto px-4 mt-8">
         
-        {/* Success Notice Card */}
-        <div className="bg-white rounded-2xl border border-slate-300 shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-6 md:p-10 text-center animate-fade-in">
+        {/* Success Notice Container */}
+        <div className="text-center animate-fade-in py-6">
           <div className="w-16 h-16 bg-[#10b981] rounded-full flex items-center justify-center mx-auto mb-5 shadow-[0_6px_20px_rgba(16,185,129,0.25)]">
             <svg className="w-8 h-8 text-white stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
           
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">Registration Confirmed!</h2>
-          <p className="text-slate-500 text-[14px] font-medium mt-2 max-w-md mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">Registration Confirmed!</h2>
+          <p className="text-slate-500 text-[14px] sm:text-[15px] font-medium mt-2.5 max-w-md mx-auto leading-relaxed">
             You are ready! Your free tickets have been successfully generated for the 14th FACD-CAB International Expo.
           </p>
 
-          {/* Attendee Pass List - Clean Layout */}
-          <div className="mt-8 border border-slate-200 rounded-2xl overflow-hidden max-w-2xl mx-auto shadow-sm">
-            <div className="bg-slate-50/80 px-6 py-3.5 border-b border-slate-200 flex justify-between items-center text-left">
+          {/* Attendee Pass List - Clean Card */}
+          <div className="mt-10 border border-slate-200 rounded-2xl overflow-hidden max-w-2xl mx-auto shadow-[0_4px_20px_rgba(0,0,0,0.02)] bg-white">
+            <div className="bg-slate-50/80 px-6 py-4 border-b border-slate-200 flex justify-between items-center text-left">
               <span className="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">Attendee Passes ({registeredList.length})</span>
               <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 uppercase tracking-wider font-mono">Approved</span>
             </div>
-            <div className="divide-y divide-slate-100 bg-white">
+            <div className="divide-y divide-slate-100">
               {registeredList.map((attendee) => (
                 <div key={attendee.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 gap-4 text-left hover:bg-slate-50/30 transition-colors">
                   <div>
