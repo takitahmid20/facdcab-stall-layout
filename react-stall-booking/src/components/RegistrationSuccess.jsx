@@ -160,14 +160,19 @@ export default function RegistrationSuccess() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-montserrat pb-20 print:bg-white print:pb-0">
+    <div className="min-h-screen bg-[#f8fafc] font-montserrat pb-20 print:bg-white print:pb-0 relative overflow-hidden">
       
+      {/* Dynamic Animated Creative Background elements */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.2] pointer-events-none z-0 print:hidden"></div>
+      <div className="absolute top-[8%] left-[-10%] w-[500px] h-[500px] bg-gradient-to-tr from-[#004b95]/15 to-indigo-300/5 rounded-full blur-[110px] pointer-events-none z-0 animate-float-1 print:hidden"></div>
+      <div className="absolute bottom-[15%] right-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-[#d31212]/10 to-rose-300/5 rounded-full blur-[130px] pointer-events-none z-0 animate-float-2 print:hidden"></div>
+
       {/* Navbar hidden in printing */}
       <div className="print:hidden">
         <Navbar />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 mt-8 print:mt-0 print:p-0">
+      <div className="max-w-4xl mx-auto px-4 mt-8 print:mt-0 print:p-0 relative z-10">
         
         {/* Success Notice Header block */}
         <div className="text-center animate-fade-in py-6 print:hidden">
