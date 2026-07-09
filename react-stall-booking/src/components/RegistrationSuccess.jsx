@@ -208,21 +208,45 @@ export default function RegistrationSuccess() {
           </p>
         </div>
 
-        {/* Dynamic Landscape Passes Container list */}
-        <div className="mt-6 flex flex-col items-center">
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 pl-1 self-start print:hidden">
-            Attendee Passes ({registeredList.length})
+        {/* Screen-Only Compact Attendee List */}
+        <div className="mt-10 border border-slate-200 rounded-2xl overflow-hidden max-w-2xl mx-auto bg-white print:hidden">
+          <div className="bg-slate-50/80 px-6 py-4 border-b border-slate-200 flex justify-between items-center text-left">
+            <span className="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">Attendee Passes ({registeredList.length})</span>
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 uppercase tracking-wider font-mono">Approved</span>
           </div>
-          
-          <div className="w-full">
+          <div className="divide-y divide-slate-100">
             {registeredList.map((attendee) => (
-              <TicketCard 
-                key={attendee.id} 
-                attendee={attendee} 
-                onPrint={handlePrintSingle} 
-              />
+              <div key={attendee.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 gap-4 text-left hover:bg-slate-50/30 transition-colors">
+                <div>
+                  <div className="font-extrabold text-slate-800 text-[15px]">{attendee.fullName}</div>
+                  <div className="text-[12px] text-slate-500 mt-0.5 font-medium">{attendee.email}</div>
+                  <span className="inline-block mt-2 text-[10px] font-extrabold bg-[#004b95]/5 text-[#004b95] border border-[#004b95]/10 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold">
+                    {attendee.type}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setSelectedTicket(attendee)}
+                  className="px-5 py-2.5 bg-[#004b95] hover:bg-[#003972] text-white font-bold text-[12px] rounded-lg transition-all cursor-pointer border-0 flex items-center justify-center gap-1.5 shrink-0"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" />
+                  </svg>
+                  View Ticket
+                </button>
+              </div>
             ))}
           </div>
+        </div>
+
+        {/* Print-Only Sequential Tickets Render */}
+        <div className="hidden print:block">
+          {registeredList.map((attendee) => (
+            <TicketCard 
+              key={attendee.id} 
+              attendee={attendee} 
+              onPrint={handlePrintSingle} 
+            />
+          ))}
         </div>
 
         {/* Page Footer Action buttons */}
