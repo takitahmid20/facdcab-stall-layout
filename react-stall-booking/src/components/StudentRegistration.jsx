@@ -18,6 +18,9 @@ export default function StudentRegistration() {
   const [primaryExpanded, setPrimaryExpanded] = useState(true);
   const [collapsedAttendees, setCollapsedAttendees] = useState({});
 
+  // Real-time preview active index
+  const [previewIndex, setPreviewIndex] = useState(0);
+
   // Full-screen secure generator loader states
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
@@ -58,6 +61,9 @@ export default function StudentRegistration() {
     });
     updatedCollapsed[newId] = false;
     setCollapsedAttendees(updatedCollapsed);
+    
+    // Auto-select the newly added attendee for live previewing
+    setPreviewIndex(additionalAttendees.length + 1);
   };
 
   // Remove guest
@@ -66,6 +72,9 @@ export default function StudentRegistration() {
     const updatedCollapsed = { ...collapsedAttendees };
     delete updatedCollapsed[id];
     setCollapsedAttendees(updatedCollapsed);
+    
+    // Reset preview to primary attendee to prevent out of bounds
+    setPreviewIndex(0);
   };
 
   // Update additional attendee fields
@@ -169,10 +178,43 @@ export default function StudentRegistration() {
   const totalPerson = 1 + additionalAttendees.length;
   const relationOptions = ['Friend', 'Family Member', 'Parent', 'Classmate'];
 
+  // Identify attendee details currently showing in live ticket preview
+  const getPreviewData = () => {
+    if (previewIndex === 0) {
+      return {
+        fullName: formData.fullName || 'YOUR NAME',
+        email: formData.email || 'your.email@domain.com',
+        phone: formData.phone || '+880 17XX XXXXXX',
+        type: 'Student Pass',
+        ticketId: 'FACD-STU-XXXXXX'
+      };
+    } else {
+      const guest = additionalAttendees[previewIndex - 1];
+      if (!guest) {
+        return {
+          fullName: 'COMPANION NAME',
+          email: 'companion@domain.com',
+          phone: '+880 18XX XXXXXX',
+          type: 'Guest Pass',
+          ticketId: 'FACD-GST-XXXXXX'
+        };
+      }
+      return {
+        fullName: guest.fullName || 'COMPANION NAME',
+        email: guest.email || 'companion@domain.com',
+        phone: guest.phone || '+880 18XX XXXXXX',
+        type: `${guest.relationship} Pass`,
+        ticketId: 'FACD-GST-XXXXXX'
+      };
+    }
+  };
+
+  const activePreview = getPreviewData();
+
   // Input Field Redesign with Inline Checks
   const renderInputField = ({ label, type, value, onChange, placeholder, error, isValid }) => {
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5 text-left">
         <label className="block text-[11px] font-extrabold text-slate-700 uppercase tracking-wider">{label}</label>
         <div className="relative">
           <input
@@ -191,7 +233,7 @@ export default function StudentRegistration() {
           {isValid && !error && (
             <div className="absolute right-3.5 top-[50%] -translate-y-[50%] text-emerald-500 flex items-center justify-center">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
           )}
@@ -205,64 +247,62 @@ export default function StudentRegistration() {
     <div className="min-h-screen bg-[#f8fafc] font-montserrat pb-24">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         
-        {/* Dynamic Split Screen Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
-          {/* LEFT COLUMN: Expo Branding, Title, Tagline, Date/Venue left-aligned (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-6 text-left items-start justify-start lg:py-8">
-            
-            {/* Circular Association Logo */}
-            <div className="flex items-center gap-3">
-              <img 
-                src="https://www.facdcab.org/images/logo.svg" 
-                alt="FACD-CAB Logo" 
-                className="h-14"
-              />
-              <div className="flex flex-col">
-                <h4 className="text-[13px] font-black text-[#004b95] leading-tight tracking-tight m-0">FACD-CAB</h4>
-                <p className="text-[8.5px] font-semibold text-slate-500 max-w-[280px] leading-tight m-0 mt-1">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
-              </div>
+        {/* Full-width Top Centered Branding Banner block */}
+        <div className="flex flex-col items-center justify-center text-center mb-10 gap-5">
+          {/* Association Logo */}
+          <div className="flex items-center gap-3 justify-center">
+            <img 
+              src="https://www.facdcab.org/images/logo.svg" 
+              alt="FACD-CAB Logo" 
+              className="h-14"
+            />
+            <div className="flex flex-col text-left">
+              <h4 className="text-[13px] font-black text-[#004b95] leading-tight tracking-tight m-0">FACD-CAB</h4>
+              <p className="text-[8.5px] font-semibold text-slate-500 max-w-[280px] leading-tight m-0 mt-0.5">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
             </div>
-
-            {/* Expo Large Branded Heading */}
-            <div className="mt-2 flex flex-col items-start text-left">
-              <div className="flex items-center gap-2 justify-start">
-                <span className="bg-[#d31212] text-white font-extrabold text-[14px] px-2.5 py-1.5 rounded uppercase tracking-wide shrink-0">
-                  14<sup>th</sup>
-                </span>
-                <span className="text-[12.5px] font-extrabold text-[#d31212] uppercase tracking-wider">International Event</span>
-              </div>
-              <h1 className="text-2xl md:text-3xl font-black tracking-tight leading-tight mt-3 text-left">
-                <span className="text-[#d31212] block">FACD-CAB</span>
-                <span className="text-[#004b95] block mt-1">INTERNATIONAL EXPO 2026</span>
-              </h1>
-              <p className="text-[11.5px] font-extrabold text-slate-400 uppercase tracking-widest mt-4 mb-0 leading-relaxed text-left border-l-4 border-l-[#d31212] pl-3 max-w-sm">
-                Connecting Dreams, Creating Global Opportunities
-              </p>
-            </div>
-
-            {/* Date & Venue Info Condesend into One Line */}
-            <div className="text-[11px] font-bold text-slate-600 bg-white border border-slate-200 rounded-xl px-4 py-3 mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-x-4 gap-y-1.5 leading-none w-full max-w-md">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#d31212]">📅</span>
-                <span className="text-slate-800">10 & 11 July 2026 (Fri & Sat)</span>
-              </div>
-              <span className="hidden sm:inline text-slate-300 font-normal">|</span>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[#004b95]">📍</span>
-                <span className="text-slate-800">Pan Pacific Sonargaon, Dhaka</span>
-              </div>
-            </div>
-
           </div>
 
-          {/* RIGHT COLUMN: The Clean Registration Form Card (7 cols) */}
+          {/* Title Signature */}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-2">
+              <span className="bg-[#d31212] text-white font-extrabold text-[12px] px-2.5 py-1 rounded uppercase tracking-wide">
+                14<sup>th</sup>
+              </span>
+              <span className="text-[12px] font-extrabold text-[#d31212] uppercase tracking-wider">International Event</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight leading-tight mt-3">
+              <span className="text-[#d31212]">FACD-CAB</span>{' '}
+              <span className="text-[#004b95]">INTERNATIONAL EXPO 2026</span>
+            </h1>
+            <p className="text-[11.5px] font-extrabold text-slate-400 uppercase tracking-widest mt-2 mb-0">
+              Connecting Dreams, Creating Global Opportunities
+            </p>
+          </div>
+
+          {/* Compact Date | Venue Badge */}
+          <div className="text-[11px] font-bold text-slate-600 bg-white border border-slate-200 rounded-xl px-5 py-3 mt-1 flex flex-col sm:flex-row items-center justify-center gap-x-4 gap-y-1.5 leading-none max-w-xl">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[#d31212]">📅</span>
+              <span className="text-slate-800">10 & 11 July 2026 (Fri & Sat)</span>
+            </div>
+            <span className="hidden sm:inline text-slate-300 font-normal">|</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[#004b95]">📍</span>
+              <span className="text-slate-800">Pan Pacific Sonargaon, Dhaka</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Split Screen Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          
+          {/* LEFT COLUMN: Registration Form Card (7 cols) */}
           <div className="lg:col-span-7">
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl border-t-4 border-t-[#004b95] border border-slate-200 overflow-hidden">
               
-              <div className="p-5 md:p-8 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
+              <div className="p-5 md:p-8 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between text-left">
                 <div>
                   <h3 className="text-[17px] font-black text-slate-800 tracking-tight leading-none">Register For Free Entry</h3>
                   <p className="text-[11.5px] text-slate-400 font-medium mt-1.5">Free passes will be sent instantly as digital Expo passes.</p>
@@ -272,14 +312,17 @@ export default function StudentRegistration() {
                 </span>
               </div>
 
-              {/* Form container */}
+              {/* Form fields */}
               <div className="p-5 md:p-8 flex flex-col gap-6">
                 
                 {/* Primary Student Block */}
                 <div>
                   <button
                     type="button"
-                    onClick={() => setPrimaryExpanded(!primaryExpanded)}
+                    onClick={() => {
+                      setPrimaryExpanded(!primaryExpanded);
+                      setPreviewIndex(0); // Switch live preview to Primary Attendee
+                    }}
                     className="w-full flex items-center justify-between py-3.5 text-left border-b border-slate-200 bg-transparent cursor-pointer hover:opacity-85 transition-opacity"
                   >
                     <div className="flex flex-wrap items-center gap-2.5">
@@ -303,11 +346,11 @@ export default function StudentRegistration() {
                         Primary
                       </span>
                       {formData.fullName.trim() && formData.email.trim() && formData.phone.trim() ? (
-                        <span className="text-[9px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                        <span className="text-[9px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
                           Ready
                         </span>
                       ) : (
-                        <span className="text-[9px] font-extrabold bg-amber-50 text-amber-600 border border-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                        <span className="text-[9px] font-extrabold bg-amber-50 text-amber-600 border border-amber-100 px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
                           Pending
                         </span>
                       )}
@@ -362,7 +405,7 @@ export default function StudentRegistration() {
                   )}
                 </div>
 
-                {/* Additional Attendees Accordion Section */}
+                {/* Additional Attendees Section */}
                 {additionalAttendees.map((guest, idx) => {
                   const isCollapsed = !!collapsedAttendees[guest.id];
                   const hasErrors = errors.guests?.[guest.id];
@@ -372,7 +415,10 @@ export default function StudentRegistration() {
                     <div key={guest.id} className="py-1 border-t border-slate-100">
                       
                       <div
-                        onClick={() => toggleAttendeeCollapse(guest.id)}
+                        onClick={() => {
+                          toggleAttendeeCollapse(guest.id);
+                          setPreviewIndex(idx + 1); // Switch live preview to this companion
+                        }}
                         className="w-full flex items-center justify-between py-3.5 text-left bg-transparent cursor-pointer hover:opacity-85 transition-opacity"
                       >
                         <div className="flex flex-wrap items-center gap-2.5">
@@ -392,7 +438,7 @@ export default function StudentRegistration() {
                           <span className="text-[13.5px] font-black text-slate-800 uppercase tracking-wide">
                             Attendee #{idx + 2}{guest.fullName.trim() ? ` — ${guest.fullName.trim()}` : ''}
                           </span>
-                          <span className="text-[9px] font-extrabold bg-[#004b95]/5 text-[#004b95] border border-[#004b95]/10 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono font-bold">
+                          <span className="text-[9px] font-extrabold bg-[#004b95]/5 text-[#004b95] border border-[#004b95]/10 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
                             {guest.relationship}
                           </span>
                           {isGuestReady ? (
@@ -467,8 +513,8 @@ export default function StudentRegistration() {
                             isValid: guest.phone.trim().length > 7
                           })}
 
-                          {/* Interactive Relationship Selector pills */}
-                          <div className="flex flex-col gap-1.5">
+                          {/* Interactive pills */}
+                          <div className="flex flex-col gap-1.5 text-left">
                             <label className="block text-[11px] font-extrabold text-slate-700 uppercase tracking-wider">Relationship</label>
                             <div className="flex flex-wrap gap-2 mt-0.5">
                               {relationOptions.map((rel) => {
@@ -512,7 +558,7 @@ export default function StudentRegistration() {
 
               </div>
 
-              {/* Submit panel footer */}
+              {/* Submit footer */}
               <div className="bg-slate-50/80 px-6 py-5 border-t border-slate-150 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-[12px] font-semibold text-slate-500 text-center sm:text-left leading-relaxed">
                   Admission is 100% free. Digital badges will be generated immediately.
@@ -526,6 +572,162 @@ export default function StudentRegistration() {
               </div>
 
             </form>
+          </div>
+
+          {/* RIGHT COLUMN: Sticky Real-Time ticket pass preview (5 cols) */}
+          <div className="lg:col-span-5 lg:sticky lg:top-8 flex flex-col gap-3 text-left">
+            <span className="text-[9.5px] font-black text-slate-400 uppercase tracking-widest block pl-1">
+              Live Expo Pass Preview
+            </span>
+            
+            {/* Attendee pass tab selector switcher */}
+            {additionalAttendees.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-2 bg-slate-200/50 p-1 rounded-xl border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setPreviewIndex(0)}
+                  className={`px-3 py-2 rounded-lg text-[10.5px] font-extrabold transition-all cursor-pointer border-0 ${
+                    previewIndex === 0 ? 'bg-[#004b95] text-white' : 'bg-transparent text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  You (Pass 1)
+                </button>
+                {additionalAttendees.map((guest, idx) => (
+                  <button
+                    key={guest.id}
+                    type="button"
+                    onClick={() => setPreviewIndex(idx + 1)}
+                    className={`px-3 py-2 rounded-lg text-[10.5px] font-extrabold transition-all cursor-pointer border-0 ${
+                      previewIndex === idx + 1 ? 'bg-[#004b95] text-white' : 'bg-transparent text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    Pass {idx + 2} ({guest.relationship})
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Scale card container wrapper to fit the sidebar space cleanly */}
+            <div className="w-full overflow-hidden border-2 border-slate-200 rounded-2xl bg-slate-100 flex items-center justify-center p-4 min-h-[220px] sm:min-h-[240px] md:min-h-[260px] lg:min-h-[200px] xl:min-h-[240px]">
+              <div className="origin-center scale-[0.45] sm:scale-[0.55] md:scale-[0.6] lg:scale-[0.45] xl:scale-[0.58] transition-all duration-200 shrink-0">
+                
+                {/* Visual Landscape Ticket rendering live values */}
+                <div className="w-[720px] h-[280px] bg-white border-2 border-slate-200 rounded-2xl flex flex-row overflow-hidden text-left relative">
+                  
+                  {/* Left part */}
+                  <div className="flex-1 p-6 flex flex-col justify-between gap-4">
+                    
+                    {/* Brand */}
+                    <div className="flex items-center gap-2.5 border-b border-slate-100 pb-2.5">
+                      <img className="h-7" src="https://www.facdcab.org/images/logo.svg" alt="FACD-CAB Logo" />
+                      <div className="flex flex-col">
+                        <h4 className="text-[11px] font-extrabold text-[#004b95] m-0 leading-none">FACD-CAB</h4>
+                        <p className="text-[6.5px] font-semibold text-slate-500 m-0 mt-0.5 leading-none">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <div>
+                      <div className="flex items-center">
+                        <span className="bg-[#d31212] text-white text-[11px] font-extrabold px-1.5 py-0.5 rounded mr-2 uppercase tracking-wider shrink-0 leading-none">14<sup>th</sup></span>
+                        <span className="text-[12.5px] font-black uppercase"><span className="text-[#d31212]">FACD-CAB</span> <span className="text-[#004b95]">International Expo 2026</span></span>
+                      </div>
+                      <p className="text-[8px] text-slate-500 font-extrabold uppercase tracking-widest mt-1 mb-0">Connecting Dreams, Creating Global Opportunities</p>
+                    </div>
+
+                    {/* Attendee Details Card */}
+                    <div className="bg-slate-50/70 border border-slate-100 rounded-lg p-2.5 flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[7.5px] font-extrabold text-slate-400 uppercase tracking-wider mb-0.5">Ticket Holder</span>
+                        <h2 className="text-[15px] font-black text-slate-800 m-0 leading-none">{activePreview.fullName}</h2>
+                      </div>
+                      <div className="text-right flex flex-col gap-0.5">
+                        <div className="text-[10px] text-slate-500 font-medium"><strong>Email:</strong> {activePreview.email}</div>
+                        <div className="text-[10px] text-slate-500 font-medium"><strong>Phone:</strong> {activePreview.phone}</div>
+                      </div>
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex flex-row gap-6 mt-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center shrink-0">
+                          <svg className="w-3.5 h-3.5 text-[#d31212]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                          </svg>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[7.5px] text-slate-400 font-extrabold uppercase tracking-wider leading-none mb-0.5">Date & Day</span>
+                          <span className="text-[9.5px] text-slate-800 font-black leading-none">10 & 11 July 2026 (Fri & Sat)</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+                          <svg className="w-3.5 h-3.5 text-[#004b95]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z" />
+                          </svg>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[7.5px] text-slate-400 font-extrabold uppercase tracking-wider leading-none mb-0.5">Venue</span>
+                          <span className="text-[9.5px] text-slate-800 font-black leading-none">Pan Pacific Sonargaon, Dhaka</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stub Part */}
+                  <div className="w-[200px] bg-slate-50 border-l-2 border-dashed border-slate-350 p-5 flex flex-col justify-between items-center relative shrink-0">
+                    <div className="absolute w-4 h-4 bg-[#f8fafc] rounded-full border-b border-slate-200 -left-2.5 -top-2.5"></div>
+                    <div className="absolute w-4 h-4 bg-[#f8fafc] rounded-full border-t border-slate-200 -left-2.5 -bottom-2.5"></div>
+                    
+                    <div className="stub-header text-center w-full">
+                      <span className="bg-[#004b95]/5 text-[#004b95] border border-[#004b95]/20 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider font-mono">
+                        {activePreview.type.replace(' Pass', '')} Pass
+                      </span>
+                    </div>
+
+                    <div className="stub-middle text-center w-full flex flex-col items-center gap-1.5 py-2">
+                      <div className="font-mono text-[9px] font-bold text-slate-500">ID: <span className="text-slate-800 font-extrabold">{activePreview.ticketId}</span></div>
+                      <div className="w-16 h-16 bg-white p-1 rounded-lg border border-slate-200 flex items-center justify-center">
+                        <svg className="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="100" height="100" fill="#ffffff" />
+                          <rect x="8" y="8" width="26" height="26" fill="#000000" />
+                          <rect x="12" y="12" width="18" height="18" fill="#ffffff" />
+                          <rect x="16" y="16" width="10" height="10" fill="#000000" />
+                          <rect x="66" y="8" width="26" height="26" fill="#000000" />
+                          <rect x="70" y="12" width="18" height="18" fill="#ffffff" />
+                          <rect x="74" y="16" width="10" height="10" fill="#000000" />
+                          <rect x="8" y="66" width="26" height="26" fill="#000000" />
+                          <rect x="12" y="70" width="18" height="18" fill="#ffffff" />
+                          <rect x="16" y="74" width="10" height="10" fill="#000000" />
+                          <rect x="40" y="12" width="6" height="6" fill="#000000" />
+                          <rect x="48" y="18" width="8" height="8" fill="#000000" />
+                          <rect x="16" y="40" width="8" height="8" fill="#000000" />
+                          <rect x="28" y="44" width="12" height="6" fill="#000000" />
+                          <rect x="44" y="40" width="14" height="14" fill="#000000" />
+                          <rect x="48" y="44" width="6" height="6" fill="#ffffff" />
+                          <rect x="68" y="40" width="8" height="8" fill="#000000" />
+                          <rect x="80" y="44" width="8" height="6" fill="#000000" />
+                          <rect x="40" y="68" width="6" height="12" fill="#000000" />
+                          <rect x="52" y="76" width="10" height="8" fill="#000000" />
+                          <rect x="68" y="68" width="12" height="12" fill="#000000" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div className="stub-footer text-center w-full">
+                      <span className="text-[8px] font-extrabold text-emerald-600 bg-emerald-50 border border-emerald-250 px-2.5 py-0.5 rounded uppercase tracking-wider leading-none">FREE ENTRY</span>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <p className="text-[11px] font-semibold text-slate-400 leading-normal max-w-sm">
+              * The preview updates dynamically letter-by-letter as you type your registration details into the form inputs.
+            </p>
           </div>
 
         </div>
