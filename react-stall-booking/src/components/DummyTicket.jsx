@@ -10,8 +10,8 @@ export default function DummyTicket() {
   <meta charset="utf-8">
   <title>FACD-CAB Expo 2026 - Entry Pass</title>
   <style>
-    /* Premium self-contained Ticket Styles for PDF/Email generation */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Space+Mono:wght@400;700&display=swap');
+    /* Premium self-contained Landscape Ticket Styles for PDF/Email generation */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
     
     body {
       background-color: #f8fafc;
@@ -21,156 +21,158 @@ export default function DummyTicket() {
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 80vh;
     }
     
     .ticket-card {
-      width: 360px;
+      width: 680px;
+      height: 240px;
       background: #ffffff;
       border: 2px solid #e2e8f0;
       border-radius: 16px;
+      display: flex;
+      flex-direction: row;
       overflow: hidden;
       margin: 0 auto;
     }
     
-    .ticket-header {
-      background-color: #1e293b;
-      color: #ffffff;
-      padding: 24px 20px;
-      text-align: center;
+    /* Left Main Section */
+    .ticket-main {
+      flex: 1;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
     }
     
-    .logo-container {
-      margin-bottom: 10px;
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     
     .logo-img {
-      height: 24px;
+      height: 22px;
     }
     
-    .expo-title {
-      font-size: 13px;
+    .expo-tag {
+      font-size: 11px;
       font-weight: 800;
+      color: #475569;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin: 0;
     }
     
-    .pass-tagline {
-      font-size: 10px;
-      color: #94a3b8;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin: 4px 0 0 0;
-      font-family: 'Space Mono', monospace;
-    }
-    
-    .ticket-body {
-      padding: 24px 20px;
-      text-align: center;
-    }
-    
-    .badge-wrapper {
-      margin-bottom: 16px;
-    }
-    
-    .pass-badge {
-      background-color: rgba(21, 93, 252, 0.08);
-      color: #155dfc;
-      border: 1px solid rgba(21, 93, 252, 0.2);
-      font-size: 10px;
-      font-weight: 800;
-      padding: 5px 14px;
-      border-radius: 100px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: inline-block;
+    .holder-details {
+      margin: 12px 0;
     }
     
     .holder-name {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       color: #0f172a;
       margin: 0 0 6px 0;
       letter-spacing: -0.02em;
     }
     
-    .holder-email {
-      font-size: 12.5px;
+    .holder-meta {
+      font-size: 12px;
       color: #475569;
       font-weight: 500;
-      margin: 0 0 2px 0;
     }
     
-    .holder-phone {
-      font-size: 12px;
-      color: #64748b;
-      font-family: 'Space Mono', monospace;
-      margin: 0;
+    .holder-meta span {
+      display: inline-block;
     }
     
-    .divider-line {
-      border-top: 2px dashed #cbd5e1;
-      margin: 20px 0;
-      position: relative;
+    .info-row {
+      display: flex;
+      flex-direction: row;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 14px;
     }
     
-    /* Tear Circle Cuts */
-    .divider-line::before, .divider-line::after {
-      content: '';
-      position: absolute;
-      top: -9px;
-      width: 16px;
-      height: 16px;
-      background-color: #f8fafc;
-      border-radius: 50%;
-    }
-    .divider-line::before {
-      left: -29px;
-      border-right: 2px solid #e2e8f0;
-    }
-    .divider-line::after {
-      right: -29px;
-      border-left: 2px solid #e2e8f0;
-    }
-    
-    .info-grid {
-      display: grid;
-      grid-template-cols: 1fr 1fr;
-      gap: 16px;
-      text-align: left;
-      margin-bottom: 20px;
+    .info-col {
+      display: flex;
+      flex-direction: column;
     }
     
     .info-label {
-      font-size: 9.5px;
+      font-size: 9px;
       color: #94a3b8;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      display: block;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
     
     .info-value {
       font-size: 11.5px;
       color: #1e293b;
-      font-weight: 800;
-      margin: 0;
-      line-height: 1.3;
+      font-weight: 750;
     }
     
-    .barcode-section {
+    /* Right Stub Section */
+    .ticket-stub {
+      width: 210px;
+      background-color: #fafafa;
+      border-left: 2px dashed #cbd5e1;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      position: relative;
+    }
+    
+    /* Tear Circle Cuts */
+    .tear-circle-top, .tear-circle-bottom {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background-color: #f8fafc;
+      border-radius: 50%;
+      left: -10px;
+    }
+    .tear-circle-top {
+      top: -10px;
+      border-bottom: 2px solid #cbd5e1;
+    }
+    .tear-circle-bottom {
+      bottom: -10px;
+      border-top: 2px solid #cbd5e1;
+    }
+    
+    .stub-header {
+      width: 100%;
       text-align: center;
-      margin-top: 10px;
+    }
+    
+    .pass-badge {
+      background-color: rgba(21, 93, 252, 0.08);
+      color: #155dfc;
+      border: 1px solid rgba(21, 93, 252, 0.2);
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: inline-block;
+    }
+    
+    .stub-middle {
+      text-align: center;
+      width: 100%;
     }
     
     .ticket-id {
       font-family: 'Space Mono', monospace;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       color: #64748b;
-      text-transform: uppercase;
       margin-bottom: 8px;
     }
     
@@ -180,87 +182,111 @@ export default function DummyTicket() {
     }
     
     .barcode-lines {
-      height: 40px;
+      height: 38px;
       display: inline-flex;
       justify-content: space-between;
-      width: 176px;
+      width: 150px;
+      opacity: 0.9;
     }
     
     .barcode-bar {
       background-color: #1e293b;
       height: 100%;
     }
+    
+    .stub-footer {
+      width: 100%;
+      text-align: center;
+    }
+    
+    .entry-tag {
+      font-size: 9px;
+      font-weight: 800;
+      color: #10b981;
+      background-color: #eefcf5;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 3px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
   </style>
 </head>
 <body>
 
   <div class="ticket-card">
-    <div class="ticket-header">
-      <div class="logo-container">
+    <div class="ticket-main">
+      <div class="header-row">
         <img class="logo-img" src="https://www.facdcab.org/images/logo.svg" alt="FACD-CAB Logo">
+        <span class="expo-tag">14th Expo 2026</span>
       </div>
-      <h3 class="expo-title">FACD-CAB Expo 2026</h3>
-      <p class="pass-tagline">Free Entry Ticket</p>
+      
+      <div class="holder-details">
+        <h1 class="holder-name">Shakib Al Hasan</h1>
+        <div class="holder-meta">
+          <span><strong>Email:</strong> shakib@domain.com</span>
+          <span style="margin-left: 20px;"><strong>Phone:</strong> +880 1712 345678</span>
+        </div>
+      </div>
+      
+      <div class="info-row">
+        <div class="info-col">
+          <span class="info-label">Date & Time</span>
+          <span class="info-value">August 7 & 8, 2026 (10 AM - 6 PM)</span>
+        </div>
+        <div class="info-col" style="margin-left: 32px;">
+          <span class="info-label">Venue</span>
+          <span class="info-value">Pan Pacific Sonargaon, Dhaka</span>
+        </div>
+      </div>
     </div>
     
-    <div class="ticket-body">
-      <div class="badge-wrapper">
+    <div class="ticket-stub">
+      <div class="tear-circle-top"></div>
+      <div class="tear-circle-bottom"></div>
+      
+      <div class="stub-header">
         <span class="pass-badge">Student Pass</span>
       </div>
       
-      <h1 class="holder-name">Shakib Al Hasan</h1>
-      <p class="holder-email">shakib@domain.com</p>
-      <p class="holder-phone">+880 1712 345678</p>
-      
-      <div class="divider-line"></div>
-      
-      <div class="info-grid">
-        <div>
-          <span class="info-label">Date</span>
-          <p class="info-value">Aug 7 & 8, 2026</p>
-        </div>
-        <div>
-          <span class="info-label">Venue</span>
-          <p class="info-value">Pan Pacific Sonargaon, Dhaka</p>
+      <div class="stub-middle">
+        <div class="ticket-id">ID: <span class="ticket-id-val">FACD-STU-845192</span></div>
+        <div class="barcode-lines">
+          <div class="barcode-bar" style="width: 2px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 2px; opacity: 0.3;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 2px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 2px; opacity: 0.3;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 2px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 2px; opacity: 0.3;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 2px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
+          <div class="barcode-bar" style="width: 2px;"></div>
+          <div class="barcode-bar" style="width: 3px;"></div>
+          <div class="barcode-bar" style="width: 1px;"></div>
         </div>
       </div>
       
-      <div class="barcode-section">
-        <div class="ticket-id">Ticket ID: <span class="ticket-id-val">FACD-STU-845192</span></div>
-        <div class="barcode-lines">
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 2px; opacity: 0.3;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 2px; opacity: 0.3;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 2px; opacity: 0.3;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-          <div class="barcode-bar" style="width: 4px;"></div>
-          <div class="barcode-bar" style="width: 2px;"></div>
-        </div>
+      <div class="stub-footer">
+        <span class="entry-tag">FREE ENTRY</span>
       </div>
     </div>
   </div>
@@ -285,7 +311,7 @@ export default function DummyTicket() {
           <div>
             <span className="text-[10px] font-bold bg-white/20 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Developer Handoff View</span>
             <h1 className="text-xl md:text-2xl font-black mt-2 tracking-tight">Dummy Ticket HTML/CSS Template</h1>
-            <p className="text-slate-400 text-xs mt-1 font-medium">Self-contained ticket layout (Internal CSS) ready for backend PDF/Email generation.</p>
+            <p className="text-slate-400 text-xs mt-1 font-medium">Self-contained landscape ticket layout (Internal CSS) ready for backend PDF/Email generation.</p>
           </div>
           <button
             onClick={handleCopy}
@@ -301,19 +327,19 @@ export default function DummyTicket() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* Left Pane: isolated iframe render */}
-          <div className="lg:col-span-5 flex flex-col gap-3">
-            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">Visual Preview</div>
-            <div className="flex-1 min-h-[580px] bg-slate-100 border border-slate-300 rounded-2xl overflow-hidden flex items-center justify-center p-6">
+          <div className="lg:col-span-6 flex flex-col gap-3">
+            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">Visual Preview (Landscape Boarding Pass)</div>
+            <div className="flex-1 min-h-[360px] bg-slate-100 border border-slate-300 rounded-2xl overflow-hidden flex items-center justify-center p-6">
               <iframe
                 title="Ticket Visual Preview"
                 srcDoc={rawHtmlTemplate}
-                className="w-full h-[580px] border-0 overflow-hidden bg-transparent"
+                className="w-full h-[280px] border-0 overflow-hidden bg-transparent"
               />
             </div>
           </div>
 
           {/* Right Pane: exportable code viewer */}
-          <div className="lg:col-span-7 flex flex-col gap-3">
+          <div className="lg:col-span-6 flex flex-col gap-3">
             <div className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">Self-Contained Source Code</div>
             <div className="flex-1 bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden flex flex-col">
               <div className="bg-slate-800/80 px-5 py-3 border-b border-slate-700 flex justify-between items-center text-xs font-mono text-slate-400">
@@ -322,14 +348,14 @@ export default function DummyTicket() {
                   onClick={handleCopy}
                   className="bg-transparent border-0 hover:text-white cursor-pointer font-bold font-mono text-xs"
                 >
-                  {copied ? 'Copied!' : 'Copy Code'}
+                  {copied ? 'Copy Code' : 'Copy Code'}
                 </button>
               </div>
               <textarea
                 readOnly
                 value={rawHtmlTemplate}
                 className="flex-1 w-full p-5 bg-slate-950 text-slate-300 font-mono text-[12px] leading-relaxed border-0 outline-none resize-none overflow-y-auto"
-                style={{ minHeight: '520px' }}
+                style={{ minHeight: '300px' }}
               />
             </div>
           </div>
