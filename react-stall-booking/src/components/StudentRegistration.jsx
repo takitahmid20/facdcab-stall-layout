@@ -155,7 +155,7 @@ export default function StudentRegistration() {
       <div className="max-w-4xl mx-auto px-4 mt-8">
         
         {/* Banner Card */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#155dfc] to-[#4f39f6] text-white p-8 md:p-10 shadow-[0_12px_40px_rgba(21,93,252,0.15)] mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#155dfc] to-[#4f39f6] text-white p-6 md:p-10 shadow-[0_12px_40px_rgba(21,93,252,0.15)] mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex-1">
             <span className="bg-white/20 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Education Expo 2026</span>
             <h1 className="text-2xl md:text-3xl font-extrabold mt-3 leading-tight tracking-tight">
@@ -165,7 +165,7 @@ export default function StudentRegistration() {
               Connecting dreams, creating opportunities. Meet top global university representatives and explore careers.
             </p>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/15 text-center min-w-[200px]">
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/15 text-center w-full md:w-auto md:min-w-[200px]">
             <div className="text-[10px] uppercase font-bold text-white/70 tracking-widest">Registration Status</div>
             <div className="text-[22px] font-black text-white mt-1">FREE ENTRY</div>
             <div className="text-[11px] text-white/80 mt-1 font-semibold">August 7 & 8, 2026</div>

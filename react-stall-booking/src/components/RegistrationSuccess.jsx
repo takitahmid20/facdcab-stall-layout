@@ -105,7 +105,7 @@ export default function RegistrationSuccess() {
       {selectedTicket && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999] flex items-center justify-center p-4 font-montserrat animate-fade-in print:bg-white print:p-0 print:absolute print:inset-0">
           
-          <div className="bg-white max-w-md w-full rounded-2xl border border-slate-350 overflow-hidden shadow-2xl relative flex flex-col items-center justify-between print:shadow-none print:border-none print:my-0">
+          <div className="bg-white max-w-[360px] sm:max-w-md w-full rounded-2xl border border-slate-350 overflow-hidden shadow-2xl relative flex flex-col items-center justify-between print:shadow-none print:border-none print:my-0">
             
             {/* Modal Header */}
             <div className="w-full bg-slate-800 text-white p-5 text-center flex flex-col items-center gap-1.5 print:bg-transparent print:text-slate-800 print:p-2">
