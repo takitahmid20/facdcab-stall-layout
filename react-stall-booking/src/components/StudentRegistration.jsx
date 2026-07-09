@@ -535,7 +535,7 @@ export default function StudentRegistration() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-8 py-4 bg-[#004b95] hover:bg-[#003972] text-white font-extrabold text-[13px] rounded-xl transition-all cursor-pointer border-0 uppercase tracking-wider"
+                  className="w-full sm:w-auto px-8 py-4 bg-[#004b95] hover:bg-[#003972] text-white font-extrabold text-[13px] rounded-xl transition-all cursor-pointer border-0 uppercase tracking-wider whitespace-nowrap"
                 >
                   Get {totalPerson} Free {totalPerson === 1 ? 'ticket' : 'tickets'}
                 </button>
