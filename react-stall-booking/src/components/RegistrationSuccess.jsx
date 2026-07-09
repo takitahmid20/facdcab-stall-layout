@@ -125,35 +125,10 @@ export default function RegistrationSuccess() {
             </span>
           </div>
 
-          <div className="stub-middle text-center w-full flex flex-col items-center gap-1.5 py-2">
-            <div className="font-mono text-[9px] font-bold text-slate-500">
-              ID: <span className="text-slate-800 font-extrabold">{attendee.ticketId}</span>
-            </div>
-            <div className="w-16 h-16 bg-white p-1 rounded-lg border border-slate-200 flex items-center justify-center">
-              {/* Vector SVG Mock QR Code */}
-              <svg className="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" fill="#ffffff" />
-                <rect x="8" y="8" width="26" height="26" fill="#000000" />
-                <rect x="12" y="12" width="18" height="18" fill="#ffffff" />
-                <rect x="16" y="16" width="10" height="10" fill="#000000" />
-                <rect x="66" y="8" width="26" height="26" fill="#000000" />
-                <rect x="70" y="12" width="18" height="18" fill="#ffffff" />
-                <rect x="74" y="16" width="10" height="10" fill="#000000" />
-                <rect x="8" y="66" width="26" height="26" fill="#000000" />
-                <rect x="12" y="70" width="18" height="18" fill="#ffffff" />
-                <rect x="16" y="74" width="10" height="10" fill="#000000" />
-                <rect x="40" y="12" width="6" height="6" fill="#000000" />
-                <rect x="48" y="18" width="8" height="8" fill="#000000" />
-                <rect x="16" y="40" width="8" height="8" fill="#000000" />
-                <rect x="28" y="44" width="12" height="6" fill="#000000" />
-                <rect x="44" y="40" width="14" height="14" fill="#000000" />
-                <rect x="48" y="44" width="6" height="6" fill="#ffffff" />
-                <rect x="68" y="40" width="8" height="8" fill="#000000" />
-                <rect x="80" y="44" width="8" height="6" fill="#000000" />
-                <rect x="40" y="68" width="6" height="12" fill="#000000" />
-                <rect x="52" y="76" width="10" height="8" fill="#000000" />
-                <rect x="68" y="68" width="12" height="12" fill="#000000" />
-              </svg>
+          <div className="stub-middle text-center w-full flex flex-col items-center gap-1.5 py-6">
+            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">Ticket ID</span>
+            <div className="font-mono text-[12.5px] font-black text-slate-800 tracking-wider bg-slate-100 border border-slate-200/60 px-3 py-1.5 rounded-lg leading-none mt-1">
+              {attendee.ticketId}
             </div>
           </div>
 
