@@ -174,17 +174,17 @@ export default function StudentRegistration() {
 
         {/* Form View - Clean Card */}
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-300 shadow-[0_12px_36px_rgba(0,0,0,0.05)] overflow-hidden">
-          <div className="p-6 md:p-8 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between">
+          <div className="p-4 sm:p-6 md:p-8 border-b border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-[20px] font-black text-slate-800 tracking-tight">Student Registration Form</h2>
               <p className="text-slate-500 text-[12.5px] mt-1 font-medium">Please provide accurate details to generate free admission tickets.</p>
             </div>
-            <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-300 px-3.5 py-1.5 rounded-full uppercase tracking-wider font-mono">
+            <span className="self-start sm:self-auto text-[9.5px] font-bold text-amber-700 bg-amber-50 border border-amber-300 px-3.5 py-1.5 rounded-full uppercase tracking-wider font-mono shrink-0">
               100% Free Pass
             </span>
           </div>
 
-          <div className="p-6 md:p-8 flex flex-col gap-6">
+          <div className="p-4 sm:p-6 md:p-8 flex flex-col gap-6">
             
             {/* Primary Attendee Block - Flat Section */}
             <div className="py-2">

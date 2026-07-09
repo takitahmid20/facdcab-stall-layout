@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   return (
-    <div className="max-w-[1600px] mx-auto px-6 pt-5 pb-0">
-      <div className="bg-white/85 backdrop-blur-md border border-white/60 rounded-full px-7 py-3 flex justify-between items-center shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
+    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 pt-5 pb-0">
+      <div className="bg-white/85 backdrop-blur-md border border-white/60 rounded-full px-4 sm:px-7 py-3 flex justify-between items-center shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
         <div className="flex items-center">
           <Link to="/">
             <img 
