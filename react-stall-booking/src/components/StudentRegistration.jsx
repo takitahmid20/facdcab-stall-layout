@@ -543,8 +543,37 @@ export default function StudentRegistration() {
           </div>
 
           {/* RIGHT COLUMN: Sticky Real-Time ticket pass previews list (5 cols) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-8 flex flex-col gap-4 text-left">
-            <span className="text-[9.5px] font-black text-slate-400 uppercase tracking-widest block pl-1">
+          <div className="lg:col-span-5 lg:sticky lg:top-8 flex flex-col gap-5 text-left">
+            
+            {/* Compact Event Details Card */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <img 
+                  src="https://www.facdcab.org/images/logo.svg" 
+                  alt="FACD-CAB Logo" 
+                  className="h-10 shrink-0"
+                />
+                <div className="flex flex-col text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="bg-[#d31212] text-white font-black text-[9px] px-1.5 py-0.5 rounded uppercase leading-none">14<sup>th</sup></span>
+                    <h4 className="text-[12px] font-black tracking-tight m-0 text-slate-800 uppercase">FACD-CAB International Expo 2026</h4>
+                  </div>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider m-0 mt-1 leading-none">Connecting Dreams, Creating Global Opportunities</p>
+                </div>
+              </div>
+              <div className="border-t border-slate-100 pt-2.5 flex flex-col gap-1.5 text-[10.5px] font-semibold text-slate-600">
+                <div className="flex items-center gap-2">
+                  <span className="text-[#d31212] text-xs">📅</span>
+                  <span>10 & 11 July 2026 (Friday & Saturday)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#004b95] text-xs">📍</span>
+                  <span>Pan Pacific Sonargaon Hotel, Dhaka</span>
+                </div>
+              </div>
+            </div>
+
+            <span className="text-[9.5px] font-black text-slate-400 uppercase tracking-widest block pl-1 mt-1">
               Live Expo Passes Preview ({previewList.length})
             </span>
             
