@@ -899,11 +899,35 @@ export default function DummyTicket() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 mt-8">
         
         {/* Banner */}
-        <div className="bg-slate-800 text-white p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="bg-slate-800 text-white p-6 rounded-2xl mb-8 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
           <div>
             <span className="text-[10px] font-bold bg-white/20 px-2.5 py-1 rounded uppercase tracking-wider font-mono">Developer Handoff View</span>
             <h1 className="text-xl md:text-2xl font-black mt-2 tracking-tight">Dummy Ticket HTML/CSS Template</h1>
             <p className="text-slate-400 text-xs mt-1 font-medium">Self-contained landscape ticket layout matching official branding colors and style.</p>
+            <div className="flex flex-wrap gap-x-5 gap-y-2 mt-3.5 text-xs font-semibold">
+              <a 
+                href="/ticket-template.html" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="text-[#38bdf8] hover:text-[#7dd3fc] underline transition-colors flex items-center gap-1.5 no-underline"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+                Open ticket-template.html (Variant 1)
+              </a>
+              <a 
+                href="/ticket-template2.html" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="text-[#38bdf8] hover:text-[#7dd3fc] underline transition-colors flex items-center gap-1.5 no-underline"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+                Open ticket-template2.html (Variant 2)
+              </a>
+            </div>
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
