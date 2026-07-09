@@ -113,28 +113,28 @@ export default function RegistrationSuccess() {
         </div>
 
         {/* Ticket Right Stub Part */}
-        <div className="w-full sm:w-[200px] bg-slate-50 border-t sm:border-t-0 sm:border-l-2 border-dashed border-slate-300 p-5 flex flex-row sm:flex-col justify-between items-center box-border relative shrink-0 print:border-l-2 print:border-t-0 print:w-[200px] print:h-full print:p-4">
+        <div className="w-full sm:w-[200px] bg-[#004b95] border-t sm:border-t-0 sm:border-l-2 border-dashed border-white/30 p-5 flex flex-row sm:flex-col justify-between items-center box-border relative shrink-0 print:border-l-2 print:border-t-0 print:w-[200px] print:h-full print:p-4 print:bg-[#004b95]">
           
           {/* Tear circles overlap layout */}
           <div className="hidden sm:block absolute w-4 h-4 bg-[#f8fafc] rounded-full border-b border-slate-200 -left-2.5 -top-2.5 print:bg-white print:border-slate-200"></div>
           <div className="hidden sm:block absolute w-4 h-4 bg-[#f8fafc] rounded-full border-t border-slate-200 -left-2.5 -bottom-2.5 print:bg-white print:border-slate-200"></div>
 
           <div className="stub-header text-center w-full">
-            <span className="bg-[#004b95]/5 text-[#004b95] border border-[#004b95]/20 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+            <span className="bg-white text-[#d31212] text-[9.5px] font-black px-4 py-1.5 rounded-full uppercase tracking-wider font-mono shadow-sm">
               {attendee.type.replace(' Pass', '')} Pass
             </span>
           </div>
 
-          <div className="stub-middle text-center w-full flex flex-col items-center gap-1.5 py-6">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">Ticket ID</span>
-            <div className="font-mono text-[12.5px] font-black text-slate-800 tracking-wider bg-slate-100 border border-slate-200/60 px-3 py-1.5 rounded-lg leading-none mt-1">
+          <div className="stub-middle text-center w-full flex flex-col items-center gap-1.5 py-4 text-white">
+            <span className="font-mono text-[11px] font-bold text-white/80 tracking-wide">Ticket ID:</span>
+            <span className="font-sans text-[16px] font-black tracking-wide text-white leading-none mt-1">
               {attendee.ticketId}
-            </div>
+            </span>
           </div>
 
           <div className="stub-footer text-center w-full">
-            <span className="text-[8px] font-extrabold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded uppercase tracking-wider leading-none">
-              FREE ENTRY
+            <span className="text-[9.5px] font-black text-white bg-white/10 border border-white/25 px-4 py-2 rounded-lg uppercase tracking-wider leading-none">
+              Free Entry Pass
             </span>
           </div>
 
