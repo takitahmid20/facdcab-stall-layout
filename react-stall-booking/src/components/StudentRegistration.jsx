@@ -210,70 +210,51 @@ export default function StudentRegistration() {
         {/* Dynamic Split Screen Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
-          {/* LEFT COLUMN: Expo Branding, Title, Tagline, Date/Venue, and Benefits (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-6 text-left">
+          {/* LEFT COLUMN: Expo Branding, Title, Tagline, Date/Venue fully centered (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col gap-6 text-center items-center justify-center lg:py-8">
             
             {/* Circular Association Logo */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col items-center gap-3">
               <img 
                 src="https://www.facdcab.org/images/logo.svg" 
                 alt="FACD-CAB Logo" 
-                className="h-14"
+                className="h-16"
               />
-              <div className="flex flex-col">
+              <div className="flex flex-col items-center">
                 <h4 className="text-[13px] font-black text-[#004b95] leading-tight tracking-tight m-0">FACD-CAB</h4>
-                <p className="text-[8.5px] font-semibold text-slate-500 max-w-[280px] leading-tight m-0 mt-1">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
+                <p className="text-[8.5px] font-semibold text-slate-500 max-w-[285px] leading-tight m-0 mt-1">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
               </div>
             </div>
 
             {/* Expo Large Branded Heading */}
-            <div className="mt-2">
-              <div className="flex items-center gap-2">
-                <span className="bg-[#d31212] text-white font-extrabold text-[15px] px-3 py-1.5 rounded uppercase tracking-wide shrink-0">
+            <div className="mt-2 flex flex-col items-center">
+              <div className="flex items-center gap-2 justify-center">
+                <span className="bg-[#d31212] text-white font-extrabold text-[14px] px-2.5 py-1.5 rounded uppercase tracking-wide shrink-0">
                   14<sup>th</sup>
                 </span>
-                <span className="text-[13px] font-extrabold text-[#d31212] uppercase tracking-wider">International Event</span>
+                <span className="text-[12.5px] font-extrabold text-[#d31212] uppercase tracking-wider">International Event</span>
               </div>
               <h1 className="text-2xl md:text-3xl font-black tracking-tight leading-tight mt-3">
                 <span className="text-[#d31212] block">FACD-CAB</span>
-                <span className="text-[#004b95] block mt-1">INTERNATIONAL EDUCATION EXPO 2026</span>
+                <span className="text-[#004b95] block mt-1">INTERNATIONAL EXPO 2026</span>
               </h1>
-              <p className="text-[12.5px] font-extrabold text-slate-500 uppercase tracking-widest mt-3.5 mb-0 leading-relaxed border-l-4 border-l-[#d31212] pl-3">
+              <p className="text-[11.5px] font-extrabold text-slate-400 uppercase tracking-widest mt-4 mb-0 leading-relaxed max-w-sm">
                 Connecting Dreams, Creating Global Opportunities
               </p>
             </div>
 
-            {/* Date & Venue Info Cards */}
-            <div className="flex flex-col gap-3 mt-2">
-              {/* Date Card */}
-              <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 text-[#d31212]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                  </svg>
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wider mb-0.5">Expo Date & Days</span>
-                  <span className="text-[12px] text-slate-800 font-extrabold leading-tight">10 & 11 July 2026 (Friday & Saturday)</span>
-                </div>
+            {/* Date & Venue Info Condesend into One Line */}
+            <div className="text-[11px] font-bold text-slate-600 bg-white border border-slate-200 rounded-xl px-4 py-3 mt-2 flex flex-col sm:flex-row items-center justify-center gap-x-4 gap-y-1.5 leading-none w-full max-w-md">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[#d31212]">📅</span>
+                <span className="text-slate-800">10 & 11 July 2026 (Fri & Sat)</span>
               </div>
-
-              {/* Venue Card */}
-              <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 text-[#004b95]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z" />
-                  </svg>
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wider mb-0.5">Venue Location</span>
-                  <span className="text-[12px] text-slate-800 font-extrabold leading-tight">Pan Pacific Sonargaon Hotel, Dhaka, Bangladesh</span>
-                </div>
+              <span className="hidden sm:inline text-slate-300 font-normal">|</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[#004b95]">📍</span>
+                <span className="text-slate-800">Pan Pacific Sonargaon, Dhaka</span>
               </div>
             </div>
-
-
 
           </div>
 
