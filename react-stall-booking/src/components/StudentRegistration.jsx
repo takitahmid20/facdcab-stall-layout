@@ -210,41 +210,41 @@ export default function StudentRegistration() {
         {/* Dynamic Split Screen Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
-          {/* LEFT COLUMN: Expo Branding, Title, Tagline, Date/Venue fully centered (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-6 text-center items-center justify-center lg:py-8">
+          {/* LEFT COLUMN: Expo Branding, Title, Tagline, Date/Venue left-aligned (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col gap-6 text-left items-start justify-start lg:py-8">
             
             {/* Circular Association Logo */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex items-center gap-3">
               <img 
                 src="https://www.facdcab.org/images/logo.svg" 
                 alt="FACD-CAB Logo" 
-                className="h-16"
+                className="h-14"
               />
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col">
                 <h4 className="text-[13px] font-black text-[#004b95] leading-tight tracking-tight m-0">FACD-CAB</h4>
-                <p className="text-[8.5px] font-semibold text-slate-500 max-w-[285px] leading-tight m-0 mt-1">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
+                <p className="text-[8.5px] font-semibold text-slate-500 max-w-[280px] leading-tight m-0 mt-1">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
               </div>
             </div>
 
             {/* Expo Large Branded Heading */}
-            <div className="mt-2 flex flex-col items-center">
-              <div className="flex items-center gap-2 justify-center">
+            <div className="mt-2 flex flex-col items-start text-left">
+              <div className="flex items-center gap-2 justify-start">
                 <span className="bg-[#d31212] text-white font-extrabold text-[14px] px-2.5 py-1.5 rounded uppercase tracking-wide shrink-0">
                   14<sup>th</sup>
                 </span>
                 <span className="text-[12.5px] font-extrabold text-[#d31212] uppercase tracking-wider">International Event</span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-black tracking-tight leading-tight mt-3">
+              <h1 className="text-2xl md:text-3xl font-black tracking-tight leading-tight mt-3 text-left">
                 <span className="text-[#d31212] block">FACD-CAB</span>
                 <span className="text-[#004b95] block mt-1">INTERNATIONAL EXPO 2026</span>
               </h1>
-              <p className="text-[11.5px] font-extrabold text-slate-400 uppercase tracking-widest mt-4 mb-0 leading-relaxed max-w-sm">
+              <p className="text-[11.5px] font-extrabold text-slate-400 uppercase tracking-widest mt-4 mb-0 leading-relaxed text-left border-l-4 border-l-[#d31212] pl-3 max-w-sm">
                 Connecting Dreams, Creating Global Opportunities
               </p>
             </div>
 
             {/* Date & Venue Info Condesend into One Line */}
-            <div className="text-[11px] font-bold text-slate-600 bg-white border border-slate-200 rounded-xl px-4 py-3 mt-2 flex flex-col sm:flex-row items-center justify-center gap-x-4 gap-y-1.5 leading-none w-full max-w-md">
+            <div className="text-[11px] font-bold text-slate-600 bg-white border border-slate-200 rounded-xl px-4 py-3 mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-x-4 gap-y-1.5 leading-none w-full max-w-md">
               <div className="flex items-center gap-1.5">
                 <span className="text-[#d31212]">📅</span>
                 <span className="text-slate-800">10 & 11 July 2026 (Fri & Sat)</span>
