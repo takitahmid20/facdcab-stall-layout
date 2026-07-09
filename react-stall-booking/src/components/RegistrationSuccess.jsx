@@ -278,111 +278,15 @@ export default function RegistrationSuccess() {
               <h3 className="text-[15px] font-black tracking-tight mt-1">{selectedTicket.fullName} — Entry Ticket</h3>
             </div>
             
-            {/* Ticket Card render inside modal */}
-            <div className="p-6 md:p-10 bg-slate-50 flex items-center justify-center">
-              <div className="w-full max-w-[720px] bg-white border border-slate-200 rounded-2xl flex flex-col sm:flex-row overflow-hidden text-left relative">
-                
-                {/* Main Portion */}
-                <div className="flex-1 p-5 md:p-6 flex flex-col justify-between gap-4">
-                  <div className="flex items-center gap-2.5 border-b border-slate-100 pb-2.5">
-                    <img className="h-7" src="https://www.facdcab.org/images/logo.svg" alt="FACD-CAB Logo" />
-                    <div className="flex flex-col">
-                      <h4 className="text-[11px] font-extrabold text-[#004b95] m-0 leading-none">FACD-CAB</h4>
-                      <p className="text-[6.5px] font-semibold text-slate-500 m-0 mt-0.5 leading-none">Foreign Admission & Career Development Consultants Association of Bangladesh</p>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <div className="flex items-center">
-                      <span className="bg-[#d31212] text-white text-[11px] font-extrabold px-1.5 py-0.5 rounded mr-2 uppercase tracking-wider shrink-0 leading-none">14<sup>th</sup></span>
-                      <span className="text-[12.5px] font-black uppercase"><span className="text-[#d31212]">FACD-CAB</span> <span className="text-[#004b95]">International Expo 2026</span></span>
-                    </div>
-                    <p className="text-[8px] text-slate-500 font-extrabold uppercase tracking-widest mt-1 mb-0">Connecting Dreams, Creating Global Opportunities</p>
-                  </div>
-                  
-                  <div className="bg-slate-50/70 border border-slate-100 rounded-lg p-2.5 flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className="text-[7.5px] font-extrabold text-slate-400 uppercase tracking-wider mb-0.5">Ticket Holder</span>
-                      <h2 className="text-[15px] font-black text-slate-800 m-0 leading-tight">{selectedTicket.fullName}</h2>
-                    </div>
-                    <div className="text-right flex flex-col gap-0.5">
-                      <div className="text-[10px] text-slate-500 font-medium"><strong>Email:</strong> {selectedTicket.email}</div>
-                      <div className="text-[10px] text-slate-500 font-medium"><strong>Phone:</strong> {selectedTicket.phone}</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-row gap-6 mt-1">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center shrink-0">
-                        <svg className="w-3.5 h-3.5 text-[#d31212]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                        </svg>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[7.5px] text-slate-400 font-extrabold uppercase tracking-wider leading-none mb-0.5">Date & Day</span>
-                        <span className="text-[9.5px] text-slate-800 font-black leading-none">10 & 11 July 2026 (Fri & Sat)</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
-                        <svg className="w-3.5 h-3.5 text-[#004b95]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z" />
-                        </svg>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[7.5px] text-slate-400 font-extrabold uppercase tracking-wider leading-none mb-0.5">Venue</span>
-                        <span className="text-[9.5px] text-slate-800 font-black leading-none">Pan Pacific Sonargaon, Dhaka</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Stub Portion */}
-                <div className="w-full sm:w-[200px] bg-slate-50 border-t sm:border-t-0 sm:border-l-2 border-dashed border-slate-300 p-5 flex flex-row sm:flex-col justify-between items-center box-border relative shrink-0">
-                  <div className="hidden sm:block absolute w-4 h-4 bg-[#f8fafc] rounded-full border-b border-slate-200 -left-2.5 -top-2.5"></div>
-                  <div className="hidden sm:block absolute w-4 h-4 bg-[#f8fafc] rounded-full border-t border-slate-200 -left-2.5 -bottom-2.5"></div>
-                  
-                  <div className="stub-header text-center w-full">
-                    <span className="bg-[#004b95]/5 text-[#004b95] border border-[#004b95]/20 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider font-mono">
-                      {selectedTicket.type.replace(' Pass', '')} Pass
-                    </span>
-                  </div>
-                  
-                  <div className="stub-middle text-center w-full flex flex-col items-center gap-1.5 py-2">
-                    <div className="font-mono text-[9px] font-bold text-slate-500">ID: <span className="text-slate-800 font-extrabold">{selectedTicket.ticketId}</span></div>
-                    <div className="w-16 h-16 bg-white p-1 rounded-lg border border-slate-200 flex items-center justify-center">
-                      <svg className="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="100" height="100" fill="#ffffff" />
-                        <rect x="8" y="8" width="26" height="26" fill="#000000" />
-                        <rect x="12" y="12" width="18" height="18" fill="#ffffff" />
-                        <rect x="16" y="16" width="10" height="10" fill="#000000" />
-                        <rect x="66" y="8" width="26" height="26" fill="#000000" />
-                        <rect x="70" y="12" width="18" height="18" fill="#ffffff" />
-                        <rect x="74" y="16" width="10" height="10" fill="#000000" />
-                        <rect x="8" y="66" width="26" height="26" fill="#000000" />
-                        <rect x="12" y="70" width="18" height="18" fill="#ffffff" />
-                        <rect x="16" y="74" width="10" height="10" fill="#000000" />
-                        <rect x="40" y="12" width="6" height="6" fill="#000000" />
-                        <rect x="48" y="18" width="8" height="8" fill="#000000" />
-                        <rect x="16" y="40" width="8" height="8" fill="#000000" />
-                        <rect x="28" y="44" width="12" height="6" fill="#000000" />
-                        <rect x="44" y="40" width="14" height="14" fill="#000000" />
-                        <rect x="48" y="44" width="6" height="6" fill="#ffffff" />
-                        <rect x="68" y="40" width="8" height="8" fill="#000000" />
-                        <rect x="80" y="44" width="8" height="6" fill="#000000" />
-                        <rect x="40" y="68" width="6" height="12" fill="#000000" />
-                        <rect x="52" y="76" width="10" height="8" fill="#000000" />
-                        <rect x="68" y="68" width="12" height="12" fill="#000000" />
-                      </svg>
-                    </div>
-                  </div>
-                  
-                  <div className="stub-footer text-center w-full">
-                    <span className="text-[8px] font-extrabold text-emerald-600 bg-emerald-50 border border-emerald-250 px-2.5 py-0.5 rounded uppercase tracking-wider leading-none">FREE ENTRY</span>
-                  </div>
-                </div>
+            {/* Ticket Card render inside modal - API Placeholder */}
+            <div className="p-16 bg-slate-50 flex flex-col items-center justify-center text-center">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3 border border-slate-200">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H5.25m11.9-3.675A2.25 2.25 0 0 0 15 2.25h-3a2.25 2.25 0 0 0-2.25 2.25m6.241 0A2.25 2.25 0 0 0 18 6.75v3m-4.75 0h.008v.008h-.008V9.75Zm0 3.5h.008v.008h-.008v-.008Zm0 3.5h.008v.008h-.008v-.008Zm0-7h.008v.008h-.008V9.75Zm-3 0h.008v.008h-.008V9.75Zm0 3.5h.008v.008h-.008v-.008Zm0 3.5h.008v.008h-.008v-.008Z" />
+                </svg>
+              </div>
+              <div className="font-mono text-[12px] font-bold text-slate-500 bg-slate-250/30 border border-slate-300 px-5 py-3 rounded-xl uppercase tracking-wider">
+                "ticket call from api"
               </div>
             </div>
             
