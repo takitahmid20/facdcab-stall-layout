@@ -195,11 +195,23 @@ export default function StudentRegistration() {
                 onClick={() => setPrimaryExpanded(!primaryExpanded)}
                 className="w-full flex items-center justify-between py-3 text-left border-b border-slate-200 bg-transparent cursor-pointer hover:opacity-85 transition-opacity"
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex flex-wrap items-center gap-2.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#155dfc]"></div>
                   <span className="text-[14px] font-black text-slate-800 uppercase tracking-wide">
-                    Attendee #1: {formData.fullName.trim() || 'Primary Student details'}
+                    Attendee #1{formData.fullName.trim() ? ` — ${formData.fullName.trim()}` : ''}
                   </span>
+                  <span className="text-[9px] font-extrabold bg-[#155dfc]/10 text-[#155dfc] border border-[#155dfc]/20 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                    Primary
+                  </span>
+                  {formData.fullName.trim() && formData.email.trim() && formData.phone.trim() ? (
+                    <span className="text-[9px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-250 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                      ✓ Ready
+                    </span>
+                  ) : (
+                    <span className="text-[9px] font-extrabold bg-amber-50 text-amber-600 border border-amber-250 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono animate-pulse">
+                      ⚠ Pending
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   {!primaryExpanded && formData.fullName.trim() && (
@@ -281,11 +293,23 @@ export default function StudentRegistration() {
                     onClick={() => toggleAttendeeCollapse(guest.id)}
                     className="w-full flex items-center justify-between py-3 text-left bg-transparent cursor-pointer hover:opacity-85 transition-opacity"
                   >
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex flex-wrap items-center gap-2.5">
                       <div className="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>
                       <span className="text-[14px] font-black text-slate-800 uppercase tracking-wide">
-                        Attendee #{idx + 2}: {guest.relationship} {guest.fullName.trim() ? `— ${guest.fullName}` : ''}
+                        Attendee #{idx + 2}{guest.fullName.trim() ? ` — ${guest.fullName.trim()}` : ''}
                       </span>
+                      <span className="text-[9px] font-extrabold bg-indigo-55 bg-slate-100 text-slate-700 border border-slate-300 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                        {guest.relationship}
+                      </span>
+                      {guest.fullName.trim() && guest.email.trim() && guest.phone.trim() ? (
+                        <span className="text-[9px] font-extrabold bg-emerald-50 text-emerald-600 border border-emerald-250 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                          ✓ Ready
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-extrabold bg-amber-50 text-amber-600 border border-amber-250 px-2 py-0.5 rounded-full uppercase tracking-wider font-mono animate-pulse">
+                          ⚠ Pending
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-4">
                       {hasErrors && (
