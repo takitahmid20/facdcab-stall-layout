@@ -225,10 +225,9 @@ export default function StudentRegistration() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         
-        {/* Full-width Top Centered Branding Banner block */}
-        <div className="flex flex-col items-center justify-center text-center mb-10 gap-5">
-          {/* Association Logo */}
-          <div className="flex items-center gap-3 justify-center">
+        {/* Commented out top branding banner block per request
+        <div className="flex flex-col items-start justify-start text-left mb-10 gap-5">
+          <div className="flex items-center gap-3 justify-start">
             <img 
               src="https://www.facdcab.org/images/logo.svg" 
               alt="FACD-CAB Logo" 
@@ -240,8 +239,7 @@ export default function StudentRegistration() {
             </div>
           </div>
 
-          {/* Title Signature */}
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-start text-left">
             <div className="flex items-center gap-2">
               <span className="bg-[#d31212] text-white font-extrabold text-[12px] px-2.5 py-1 rounded uppercase tracking-wide">
                 14<sup>th</sup>
@@ -257,8 +255,7 @@ export default function StudentRegistration() {
             </p>
           </div>
 
-          {/* Compact Date | Venue Badge */}
-          <div className="text-[11px] font-bold text-slate-600 bg-white border border-slate-200 rounded-xl px-5 py-3 mt-1 flex flex-col sm:flex-row items-center justify-center gap-x-4 gap-y-1.5 leading-none max-w-xl">
+          <div className="text-[11px] font-bold text-slate-600 bg-white border border-slate-200 rounded-xl px-5 py-3 mt-1 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-x-4 gap-y-1.5 leading-none">
             <div className="flex items-center gap-1.5">
               <span className="text-[#d31212]">📅</span>
               <span className="text-slate-800">10 & 11 July 2026 (Fri & Sat)</span>
@@ -270,6 +267,7 @@ export default function StudentRegistration() {
             </div>
           </div>
         </div>
+        */}
 
         {/* Dynamic Split Screen Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
