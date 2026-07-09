@@ -36,7 +36,7 @@ export default function HallGrid({ units, onStallClick }) {
   }, [units]);
 
   return (
-    <div className="plan-card relative overflow-hidden bg-white border border-slate-200 rounded-2xl p-7 px-10 shadow-[0_4px_20px_rgba(0,0,0,0.02)] grid-lines-bg">
+    <div className="plan-card relative overflow-hidden bg-white border border-slate-200 rounded-2xl p-7 px-10 -[0_4px_20px_rgba(0,0,0,0.02)] grid-lines-bg">
       <div className="relative flex items-center justify-between w-full mb-6 font-space-mono text-[11px] text-slate-500 tracking-[0.03em] leading-relaxed">
         <div className="text-[18px] font-extrabold text-brand-blue tracking-[0.05em] font-montserrat">
           BOOK YOUR STALL

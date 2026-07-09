@@ -8,7 +8,7 @@ export default function Toast({ toasts }) {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="bg-slate-800 text-white text-[13px] font-semibold font-montserrat px-4 py-3 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.15)] max-w-[320px] animate-[fadeInUp_0.3s_ease]"
+          className="bg-slate-800 text-white text-[13px] font-semibold font-montserrat px-4 py-3 rounded-xl -[0_8px_20px_rgba(0,0,0,0.15)] max-w-[320px] animate-[fadeInUp_0.3s_ease]"
         >
           {toast.text}
         </div>

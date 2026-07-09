@@ -38,16 +38,16 @@ export default function Stall({ unit, onClick }) {
 
   // Package tier tint for available stalls — translucent so it still reads as "open" at a glance
   const TIER_CLASSES = {
-    premium: 'bg-[#8b5cf6]/[0.14] border-[#8b5cf6]/60 text-[#6d28d9] hover:bg-[#8b5cf6]/[0.24] hover:border-[#7c3aed] hover:scale-[1.04] hover:z-20 hover:shadow-[0_4px_12px_rgba(139,92,246,0.2)]',
-    sponsor: 'bg-[#38bdf8]/[0.14] border-[#38bdf8]/60 text-[#0369a1] hover:bg-[#38bdf8]/[0.24] hover:border-[#0ea5e9] hover:scale-[1.04] hover:z-20 hover:shadow-[0_4px_12px_rgba(56,189,248,0.2)]',
-    standard: 'bg-[#ec4899]/[0.12] border-[#ec4899]/55 text-[#be185d] hover:bg-[#ec4899]/[0.22] hover:border-[#db2777] hover:scale-[1.04] hover:z-20 hover:shadow-[0_4px_12px_rgba(236,72,153,0.2)]',
+    premium: 'bg-[#8b5cf6]/[0.14] border-[#8b5cf6]/60 text-[#6d28d9] hover:bg-[#8b5cf6]/[0.24] hover:border-[#7c3aed] hover:scale-[1.04] hover:z-20 -[0_4px_12px_rgba(139,92,246,0.2)]',
+    sponsor: 'bg-[#38bdf8]/[0.14] border-[#38bdf8]/60 text-[#0369a1] hover:bg-[#38bdf8]/[0.24] hover:border-[#0ea5e9] hover:scale-[1.04] hover:z-20 -[0_4px_12px_rgba(56,189,248,0.2)]',
+    standard: 'bg-[#ec4899]/[0.12] border-[#ec4899]/55 text-[#be185d] hover:bg-[#ec4899]/[0.22] hover:border-[#db2777] hover:scale-[1.04] hover:z-20 -[0_4px_12px_rgba(236,72,153,0.2)]',
   };
 
   let statusClasses = '';
   if (status === 'available') {
     statusClasses = TIER_CLASSES[tier] || TIER_CLASSES.standard;
   } else if (status === 'held-mine') {
-    statusClasses = 'bg-[#155dfc] border-[#155dfc] text-white shadow-[0_4px_14px_rgba(21,93,252,0.25)] scale-[1.04] z-20';
+    statusClasses = 'bg-[#155dfc] border-[#155dfc] text-white -[0_4px_14px_rgba(21,93,252,0.25)] scale-[1.04] z-20';
   } else if (status === 'held-other') {
     statusClasses = 'stripe-held-other border-[#f59e0b] text-[#b45309] font-bold cursor-not-allowed';
   } else if (status === 'booked') {

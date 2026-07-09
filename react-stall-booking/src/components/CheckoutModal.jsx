@@ -65,12 +65,12 @@ export default function CheckoutModal({ heldStalls, onClose, onSubmit }) {
   };
   const timerPct = Math.min(100, (minHoldRemaining / 300) * 100);
 
-  const inputClass = "w-full px-3 py-2.5 border border-slate-200 rounded-lg text-[13.5px] font-montserrat outline-none transition-all duration-150 focus:border-[#155dfc] focus:shadow-[0_0_0_3px_rgba(21,93,252,0.1)] bg-white text-slate-800";
+  const inputClass = "w-full px-3 py-2.5 border border-slate-200 rounded-lg text-[13.5px] font-montserrat outline-none transition-all duration-150 focus:border-[#155dfc] focus:-[0_0_0_3px_rgba(21,93,252,0.1)] bg-white text-slate-800";
   const labelClass = "block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-montserrat";
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[500] flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-[0_25px_50px_rgba(0,0,0,0.12)] w-full max-w-lg max-h-[90vh] overflow-y-auto border border-slate-200">
+      <div className="bg-white rounded-2xl -[0_25px_50px_rgba(0,0,0,0.12)] w-full max-w-lg max-h-[90vh] overflow-y-auto border border-slate-200">
 
         {/* Header */}
         <div className="flex justify-between items-start p-6 pb-4 border-b border-slate-100">
@@ -165,7 +165,7 @@ export default function CheckoutModal({ heldStalls, onClose, onSubmit }) {
                 className="flex-1 py-3 rounded-xl text-[13px] font-bold font-montserrat border border-slate-300 text-slate-600 bg-white hover:bg-slate-50 transition-all cursor-pointer"
                 onClick={onClose}>Cancel</button>
               <button type="submit"
-                className="flex-[2] py-3 rounded-xl text-[13px] font-bold font-montserrat text-white bg-gradient-to-r from-[#155dfc] to-[#4f39f6] shadow-[0_4px_12px_rgba(21,93,252,0.2)] hover:shadow-[0_6px_18px_rgba(21,93,252,0.35)] hover:scale-[1.01] transition-all cursor-pointer border-0">
+                className="flex-[2] py-3 rounded-xl text-[13px] font-bold font-montserrat text-white bg-gradient-to-r from-[#155dfc] to-[#4f39f6] -[0_4px_12px_rgba(21,93,252,0.2)] -[0_6px_18px_rgba(21,93,252,0.35)] hover:scale-[1.01] transition-all cursor-pointer border-0">
                 Confirm Booking
               </button>
             </div>

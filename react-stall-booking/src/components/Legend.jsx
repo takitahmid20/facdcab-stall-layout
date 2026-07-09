@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Legend() {
   return (
-    <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-montserrat">
+    <div className="bg-white rounded-xl p-5 border border-slate-200 -[0_4px_20px_rgba(0,0,0,0.03)] font-montserrat">
       <h3 className="text-[13.5px] font-bold text-slate-700 tracking-wide uppercase mb-3">Legend</h3>
 
       <div className="flex items-center gap-3 mb-2.5">

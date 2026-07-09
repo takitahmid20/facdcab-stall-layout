@@ -155,7 +155,7 @@ export default function StudentRegistration() {
       <div className="max-w-4xl mx-auto px-4 mt-8">
         
         {/* Banner Card */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#155dfc] to-[#4f39f6] text-white p-6 md:p-10 shadow-[0_12px_40px_rgba(21,93,252,0.15)] mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#155dfc] to-[#4f39f6] text-white p-6 md:p-10 -[0_12px_40px_rgba(21,93,252,0.15)] mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex-1">
             <span className="bg-white/20 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Education Expo 2026</span>
             <h1 className="text-2xl md:text-3xl font-extrabold mt-3 leading-tight tracking-tight">
@@ -173,7 +173,7 @@ export default function StudentRegistration() {
         </div>
 
         {/* Form View - Clean Card */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-300 shadow-[0_12px_36px_rgba(0,0,0,0.05)] overflow-hidden">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-300 -[0_12px_36px_rgba(0,0,0,0.05)] overflow-hidden">
           <div className="p-4 sm:p-6 md:p-8 border-b border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-[20px] font-black text-slate-800 tracking-tight">Student Registration Form</h2>
@@ -241,9 +241,7 @@ export default function StudentRegistration() {
                       type="text"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${
-                        errors.fullName ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10'
-                      }`}
+                      className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${ errors.fullName ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10' }`}
                       placeholder="e.g. Shakib Al Hasan"
                     />
                     {errors.fullName && <p className="text-rose-600 text-[11px] font-bold mt-1.5">{errors.fullName}</p>}
@@ -255,9 +253,7 @@ export default function StudentRegistration() {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${
-                        errors.email ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10'
-                      }`}
+                      className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${ errors.email ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10' }`}
                       placeholder="e.g. name@domain.com"
                     />
                     {errors.email && <p className="text-rose-600 text-[11px] font-bold mt-1.5">{errors.email}</p>}
@@ -269,9 +265,7 @@ export default function StudentRegistration() {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${
-                        errors.phone ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10'
-                      }`}
+                      className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${ errors.phone ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10' }`}
                       placeholder="e.g. +880 17XX XXXXXX"
                     />
                     {errors.phone && <p className="text-rose-600 text-[11px] font-bold mt-1.5">{errors.phone}</p>}
@@ -349,9 +343,7 @@ export default function StudentRegistration() {
                           type="text"
                           value={guest.fullName}
                           onChange={(e) => handleUpdateAttendee(guest.id, 'fullName', e.target.value)}
-                          className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${
-                            errors.guests?.[guest.id]?.fullName ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10'
-                          }`}
+                          className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${ errors.guests?.[guest.id]?.fullName ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10' }`}
                           placeholder="e.g. Mushfiqur Rahim"
                         />
                         {errors.guests?.[guest.id]?.fullName && (
@@ -365,9 +357,7 @@ export default function StudentRegistration() {
                           type="email"
                           value={guest.email}
                           onChange={(e) => handleUpdateAttendee(guest.id, 'email', e.target.value)}
-                          className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${
-                            errors.guests?.[guest.id]?.email ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10'
-                          }`}
+                          className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${ errors.guests?.[guest.id]?.email ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10' }`}
                           placeholder="e.g. companion@domain.com"
                         />
                         {errors.guests?.[guest.id]?.email && (
@@ -381,9 +371,7 @@ export default function StudentRegistration() {
                           type="tel"
                           value={guest.phone}
                           onChange={(e) => handleUpdateAttendee(guest.id, 'phone', e.target.value)}
-                          className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${
-                            errors.guests?.[guest.id]?.phone ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10'
-                          }`}
+                          className={`w-full px-4 py-3 bg-white border-2 rounded-lg text-[13.5px] font-semibold text-slate-800 placeholder-slate-400 focus:outline-none transition-all ${ errors.guests?.[guest.id]?.phone ? 'border-rose-400 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-[#155dfc] focus:ring-2 focus:ring-[#155dfc]/10' }`}
                           placeholder="e.g. +880 18XX XXXXXX"
                         />
                         {errors.guests?.[guest.id]?.phone && (
@@ -434,7 +422,7 @@ export default function StudentRegistration() {
             </div>
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#155dfc] to-[#4f39f6] text-white font-extrabold text-[13.5px] rounded-full shadow-[0_6px_20px_rgba(21,93,252,0.25)] hover:scale-[1.02] hover:shadow-[0_8px_24px_rgba(21,93,252,0.35)] transition-all cursor-pointer border-0 uppercase tracking-wider"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#155dfc] to-[#4f39f6] text-white font-extrabold text-[13.5px] rounded-full -[0_6px_20px_rgba(21,93,252,0.25)] hover:scale-[1.02] -[0_8px_24px_rgba(21,93,252,0.35)] transition-all cursor-pointer border-0 uppercase tracking-wider"
             >
               Get {totalPerson} Free {totalPerson === 1 ? 'ticket' : 'tickets'}
             </button>

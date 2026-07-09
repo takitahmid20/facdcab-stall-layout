@@ -3,7 +3,7 @@ import { fmtBDT } from './Stall';
 
 export default function DescriptionCard({ selectedUnit, onBookClick, onReleaseClick }) {
   return (
-    <div className={`bg-white rounded-xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-montserrat ${selectedUnit ? 'border-l-4 border-l-brand-blue border border-slate-200' : 'border border-slate-200'}`}>
+    <div className={`bg-white rounded-xl p-5 -[0_4px_20px_rgba(0,0,0,0.03)] font-montserrat ${selectedUnit ? 'border-l-4 border-l-brand-blue border border-slate-200' : 'border border-slate-200'}`}>
       <h3 className="text-[13.5px] font-bold text-slate-700 tracking-wide uppercase mb-3">Stall Summary</h3>
 
       {!selectedUnit ? (
@@ -55,7 +55,7 @@ export default function DescriptionCard({ selectedUnit, onBookClick, onReleaseCl
                 Release
               </button>
               <button
-                className="flex-[2] py-2.5 rounded-lg text-[12px] font-bold text-white bg-gradient-to-r from-[#155dfc] to-[#4f39f6] shadow-[0_4px_12px_rgba(21,93,252,0.2)] hover:shadow-[0_6px_16px_rgba(21,93,252,0.35)] hover:scale-[1.02] transition-all duration-150 cursor-pointer border-0"
+                className="flex-[2] py-2.5 rounded-lg text-[12px] font-bold text-white bg-gradient-to-r from-[#155dfc] to-[#4f39f6] -[0_4px_12px_rgba(21,93,252,0.2)] -[0_6px_16px_rgba(21,93,252,0.35)] hover:scale-[1.02] transition-all duration-150 cursor-pointer border-0"
                 onClick={onBookClick}
               >
                 Book Now

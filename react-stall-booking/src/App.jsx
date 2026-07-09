@@ -406,7 +406,7 @@ export default function App() {
 
       {/* Floating Hold Panel */}
       {heldStalls.length > 0 && !checkoutOpen && (
-        <div className="fixed bottom-5 right-5 z-[400] w-[320px] bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-5 font-montserrat">
+        <div className="fixed bottom-5 right-5 z-[400] w-[320px] bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl -[0_20px_50px_rgba(0,0,0,0.1)] p-5 font-montserrat">
           <div className="flex justify-between items-center mb-3">
             <span className="text-[13.5px] font-bold text-slate-800">{heldStalls.length} {heldStalls.length === 1 ? 'Stall' : 'Stalls'} Held</span>
             <button className="w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all cursor-pointer border-0 bg-transparent text-sm" onClick={handleCancelHold}>✕</button>
@@ -425,7 +425,7 @@ export default function App() {
           </div>
           <div className="flex gap-2">
             <button className="flex-1 py-2.5 rounded-lg text-[12px] font-bold border border-slate-300 text-slate-600 bg-white hover:bg-slate-50 transition-all cursor-pointer" onClick={handleCancelHold}>Release All</button>
-            <button className="flex-[2] py-2.5 rounded-lg text-[12px] font-bold text-white bg-gradient-to-r from-[#155dfc] to-[#4f39f6] shadow-[0_4px_10px_rgba(21,93,252,0.2)] hover:shadow-[0_6px_14px_rgba(21,93,252,0.35)] transition-all cursor-pointer border-0" onClick={() => setCheckoutOpen(true)}>Book Now</button>
+            <button className="flex-[2] py-2.5 rounded-lg text-[12px] font-bold text-white bg-gradient-to-r from-[#155dfc] to-[#4f39f6] -[0_4px_10px_rgba(21,93,252,0.2)] -[0_6px_14px_rgba(21,93,252,0.35)] transition-all cursor-pointer border-0" onClick={() => setCheckoutOpen(true)}>Book Now</button>
           </div>
         </div>
       )}
@@ -454,7 +454,7 @@ export default function App() {
 
       {/* Reset button */}
       <button
-        className="fixed left-5 bottom-5 z-40 bg-white border border-slate-200 rounded-lg text-slate-500 text-[11px] px-3.5 py-2 cursor-pointer font-space-mono shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:text-[#155dfc] hover:border-[#155dfc] hover:shadow-[0_4px_12px_rgba(21,93,252,0.08)] transition-all duration-200"
+        className="fixed left-5 bottom-5 z-40 bg-white border border-slate-200 rounded-lg text-slate-500 text-[11px] px-3.5 py-2 cursor-pointer font-space-mono -[0_2px_8px_rgba(0,0,0,0.02)] hover:text-[#155dfc] hover:border-[#155dfc] -[0_4px_12px_rgba(21,93,252,0.08)] transition-all duration-200"
         onClick={handleReset}
       >
         ↺ Reset prototype

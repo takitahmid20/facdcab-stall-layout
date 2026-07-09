@@ -30,15 +30,12 @@ export default function SSLCommerzGateway({ amount, orderId, storeId, onSuccess,
     onSuccess();
   };
 
-  const inputClass = "w-full px-3 py-2.5 border border-slate-200 rounded-md text-[13.5px] outline-none transition-all duration-150 focus:border-[#155dfc] focus:shadow-[0_0_0_2px_rgba(21,93,252,0.1)] bg-white text-slate-800 font-[Inter,sans-serif]";
+  const inputClass = "w-full px-3 py-2.5 border border-slate-200 rounded-md text-[13.5px] outline-none transition-all duration-150 focus:border-[#155dfc] focus:-[0_0_0_2px_rgba(21,93,252,0.1)] bg-white text-slate-800 font-[Inter,sans-serif]";
   const labelClass = "block text-[11px] font-semibold text-slate-500 mb-1.5 tracking-wide";
 
   const sideTab = (id, icon, label) => (
     <div
-      className={`px-5 py-3.5 text-[13px] font-semibold cursor-pointer transition-all duration-150 select-none
-        ${method === id
-          ? 'bg-white text-[#155dfc] border-l-4 border-[#155dfc] pl-[16px]'
-          : 'text-slate-500 hover:text-slate-700 hover:bg-white/60 border-l-4 border-transparent'}`}
+      className={`px-5 py-3.5 text-[13px] font-semibold cursor-pointer transition-all duration-150 select-none ${method === id ? 'bg-white text-[#155dfc] border-l-4 border-[#155dfc] pl-[16px]' : 'text-slate-500 hover:text-slate-700 hover:bg-white/60 border-l-4 border-transparent'}`}
       onClick={() => {
         setMethod(id);
         if (id === 'card') setSubMethod('visa');
@@ -53,10 +50,7 @@ export default function SSLCommerzGateway({ amount, orderId, storeId, onSuccess,
   const logoBtn = (id, label, active) => (
     <div
       key={id}
-      className={`px-3.5 py-2 border rounded-lg text-[11px] font-bold cursor-pointer transition-all duration-150 select-none
-        ${active
-          ? 'border-[#155dfc] bg-blue-50 text-[#155dfc] shadow-[0_0_0_2px_rgba(21,93,252,0.15)]'
-          : 'border-slate-300 bg-slate-50 text-slate-500 hover:border-slate-400'}`}
+      className={`px-3.5 py-2 border rounded-lg text-[11px] font-bold cursor-pointer transition-all duration-150 select-none ${active ? 'border-[#155dfc] bg-blue-50 text-[#155dfc] -[0_0_0_2px_rgba(21,93,252,0.15)]' : 'border-slate-300 bg-slate-50 text-slate-500 hover:border-slate-400'}`}
       onClick={() => { if (method === 'mobile') { setSubMethod(id); setOtpStep(false); } else setSubMethod(id); }}
     >
       {label}
@@ -65,7 +59,7 @@ export default function SSLCommerzGateway({ amount, orderId, storeId, onSuccess,
 
   return (
     <div className="fixed inset-0 bg-[#eef2f6] z-[9999] flex items-center justify-center p-6 font-[Inter,sans-serif]">
-      <div className="w-full max-w-[750px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden border border-slate-200 flex flex-col">
+      <div className="w-full max-w-[750px] bg-white rounded-2xl -[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden border border-slate-200 flex flex-col">
 
         {/* Warning bar */}
         <div className="bg-orange-600 text-white text-[11px] font-bold text-center py-1.5 px-3 tracking-[0.05em]">
@@ -120,7 +114,7 @@ export default function SSLCommerzGateway({ amount, orderId, storeId, onSuccess,
                     <input type="text" required placeholder="e.g. Md. Karim Uddin" value={cardName} onChange={(e) => setCardName(e.target.value)} className={inputClass} /></div>
                   <div className="flex gap-3 mt-2">
                     <button type="button" onClick={onFailure} className="flex-1 py-3 rounded-lg text-[13px] font-bold border border-red-400 text-red-500 bg-white hover:bg-red-50 transition-all cursor-pointer">Simulate Failure</button>
-                    <button type="submit" className="flex-[2] py-3 rounded-lg text-[13px] font-bold text-white bg-[#155dfc] shadow-[0_4px_10px_rgba(21,93,252,0.15)] hover:bg-[#1047d4] transition-all cursor-pointer border-0">Pay {fmtBDT(amount)}</button>
+                    <button type="submit" className="flex-[2] py-3 rounded-lg text-[13px] font-bold text-white bg-[#155dfc] -[0_4px_10px_rgba(21,93,252,0.15)] hover:bg-[#1047d4] transition-all cursor-pointer border-0">Pay {fmtBDT(amount)}</button>
                   </div>
                 </form>
               </div>
@@ -153,7 +147,7 @@ export default function SSLCommerzGateway({ amount, orderId, storeId, onSuccess,
                   )}
                   <div className="flex gap-3 mt-2">
                     <button type="button" onClick={onFailure} className="flex-1 py-3 rounded-lg text-[13px] font-bold border border-red-400 text-red-500 bg-white hover:bg-red-50 transition-all cursor-pointer">Simulate Failure</button>
-                    <button type="submit" className="flex-[2] py-3 rounded-lg text-[13px] font-bold text-white bg-[#155dfc] shadow-[0_4px_10px_rgba(21,93,252,0.15)] hover:bg-[#1047d4] transition-all cursor-pointer border-0">
+                    <button type="submit" className="flex-[2] py-3 rounded-lg text-[13px] font-bold text-white bg-[#155dfc] -[0_4px_10px_rgba(21,93,252,0.15)] hover:bg-[#1047d4] transition-all cursor-pointer border-0">
                       {!otpStep ? 'Next (Receive OTP)' : `Confirm Payment of ${fmtBDT(amount)}`}
                     </button>
                   </div>
@@ -173,7 +167,7 @@ export default function SSLCommerzGateway({ amount, orderId, storeId, onSuccess,
                 </p>
                 <div className="flex gap-3">
                   <button onClick={onFailure} className="flex-1 py-3 rounded-lg text-[13px] font-bold border border-red-400 text-red-500 bg-white hover:bg-red-50 transition-all cursor-pointer">Cancel</button>
-                  <button onClick={onSuccess} className="flex-[2] py-3 rounded-lg text-[13px] font-bold text-white bg-[#155dfc] shadow-[0_4px_10px_rgba(21,93,252,0.15)] hover:bg-[#1047d4] transition-all cursor-pointer border-0">Process Checkout</button>
+                  <button onClick={onSuccess} className="flex-[2] py-3 rounded-lg text-[13px] font-bold text-white bg-[#155dfc] -[0_4px_10px_rgba(21,93,252,0.15)] hover:bg-[#1047d4] transition-all cursor-pointer border-0">Process Checkout</button>
                 </div>
               </div>
             )}
