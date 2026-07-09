@@ -260,7 +260,7 @@ export default function StudentRegistration() {
 
           {/* RIGHT COLUMN: The Clean Registration Form Card (7 cols) */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-2xl border-t-4 border-t-[#004b95] border border-slate-200 overflow-hidden">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl border-t-4 border-t-[#004b95] border border-slate-200 overflow-hidden">
               
               <div className="p-5 md:p-8 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
                 <div>
@@ -525,7 +525,7 @@ export default function StudentRegistration() {
                 </button>
               </div>
 
-            </div>
+            </form>
           </div>
 
         </div>
