@@ -544,15 +544,15 @@ export default function StudentRegistration() {
             </form>
           </div>
 
-          {/* RIGHT COLUMN: Sticky Real-Time ticket pass previews list one after another (5 cols) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-8 flex flex-col gap-6 text-left max-h-[85vh] overflow-y-auto pr-2 pb-6">
+          {/* RIGHT COLUMN: Sticky Real-Time ticket pass previews list (5 cols) */}
+          <div className="lg:col-span-5 lg:sticky lg:top-8 flex flex-col gap-4 text-left">
             <span className="text-[9.5px] font-black text-slate-400 uppercase tracking-widest block pl-1">
               Live Expo Passes Preview ({previewList.length})
             </span>
             
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               {previewList.map((activePreview, idx) => (
-                <div key={idx} className="w-full overflow-hidden flex items-center justify-center">
+                <div key={idx} className="w-full overflow-hidden flex items-center justify-center h-[135px] sm:h-[160px] md:h-[175px] lg:h-[135px] xl:h-[165px]">
                   <div className="origin-center scale-[0.45] sm:scale-[0.55] md:scale-[0.6] lg:scale-[0.45] xl:scale-[0.58] transition-all duration-200 shrink-0">
                     
                     {/* Visual Landscape Ticket rendering live values */}
