@@ -608,7 +608,7 @@ export default function StudentRegistration() {
             )}
 
             {/* Scale card container wrapper to fit the sidebar space cleanly */}
-            <div className="w-full overflow-hidden border-2 border-slate-200 rounded-2xl bg-slate-100 flex items-center justify-center p-4 min-h-[220px] sm:min-h-[240px] md:min-h-[260px] lg:min-h-[200px] xl:min-h-[240px]">
+            <div className="w-full overflow-hidden flex items-center justify-center min-h-[220px] sm:min-h-[240px] md:min-h-[260px] lg:min-h-[200px] xl:min-h-[240px]">
               <div className="origin-center scale-[0.45] sm:scale-[0.55] md:scale-[0.6] lg:scale-[0.45] xl:scale-[0.58] transition-all duration-200 shrink-0">
                 
                 {/* Visual Landscape Ticket rendering live values */}
