@@ -6,6 +6,7 @@ import App from './App.jsx'
 import BookingSuccess from './components/BookingSuccess.jsx'
 import StudentRegistration from './components/StudentRegistration.jsx'
 import RegistrationSuccess from './components/RegistrationSuccess.jsx'
+import DummyTicket from './components/DummyTicket.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/success" element={<BookingSuccess />} />
         <Route path="/register" element={<StudentRegistration />} />
         <Route path="/register-success" element={<RegistrationSuccess />} />
+        <Route path="/dummy-ticket" element={<DummyTicket />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
